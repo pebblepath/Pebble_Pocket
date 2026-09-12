@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>Pebble Pocket — Screens</title>
-<meta name="description" content="Face mockups for Pebble Pocket on the 2.06 inch 410 × 502 AMOLED: idle, listening, reply, Learn, Calm and Hello.">
+<meta name="description" content="Face mockups for Pebble Pocket on the 2.06 inch 410 × 502 AMOLED, designed for children from three: icons first, almost no text.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
     box-shadow: 0 22px 44px rgba(44,62,64,0.22), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.5);
     display: grid; place-items: center; cursor: zoom-in;
   }
-  .watch::before, .watch::after { /* lugs */
+  .watch::before, .watch::after {
     content: ''; position: absolute; left: 50%; transform: translateX(-50%);
     width: 96px; height: 14px; background: #1A1D1E; border-radius: 6px;
   }
@@ -39,7 +39,7 @@
 
   .face {
     position: relative; width: 205px; height: 251px; border-radius: 26px; overflow: hidden;
-    background: #06100F; color: #fff; font-family: var(--font-body);
+    background: #06100F; color: #fff; font-family: var(--font-display);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
   }
   .face.mesh-dark {
@@ -49,106 +49,91 @@
       radial-gradient(ellipse 70% 50% at 50% 105%, rgba(198,123,92,0.30), transparent 65%),
       linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
   }
-  .face .status { position: absolute; top: 12px; left: 16px; right: 16px; display: flex; justify-content: space-between; font-size: 9px; font-weight: 600; letter-spacing: .08em; color: rgba(255,255,255,0.70); }
-  .face .status .batt { display: inline-flex; align-items: center; gap: 4px; }
-  .face .status .batt i { width: 14px; height: 7px; border: 1px solid rgba(255,255,255,0.7); border-radius: 2px; position: relative; }
-  .face .status .batt i::after { content: ''; position: absolute; left: 1px; top: 1px; bottom: 1px; width: 62%; background: var(--teal-glow); border-radius: 1px; }
-  .face .status .batt i.low::after { width: 18%; background: var(--terracotta); }
+  /* Only the battery survives from the old status bar; parents read the rest in the app */
+  .face .batt { position: absolute; top: 12px; right: 14px; width: 18px; height: 9px; border: 1.5px solid rgba(255,255,255,0.55); border-radius: 3px; }
+  .face .batt::after { content: ''; position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 62%; background: var(--teal-glow); border-radius: 1px; }
+  .face .batt.low::after { width: 18%; background: var(--terracotta); }
+  .face .clock { position: absolute; top: 10px; left: 14px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-body); }
 
-  .face .t-time { font-family: var(--font-display); font-weight: 800; font-size: 52px; line-height: 0.9; letter-spacing: -0.02em; }
-  .face .t-date { font-size: 11px; color: rgba(255,255,255,0.72); margin-top: 6px; font-weight: 500; }
-  .face .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 18px; }
-  .face .foot { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-size: 9.5px; color: rgba(255,255,255,0.55); font-weight: 500; }
-  .face .pebble-mark { color: var(--teal-glow); width: 34px; height: 34px; }
-  .face .pebble-mark.sm { width: 22px; height: 22px; }
+  .face .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 16px; gap: 10px; }
+  .face .word { font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
+  .face .word.fr { color: var(--amber); }
+  .face .word.sm { font-size: 18px; }
 
-  /* listening ring */
-  .ring { position: relative; width: 108px; height: 108px; display: grid; place-items: center; }
-  .ring::before, .ring::after {
-    content: ''; position: absolute; inset: 0; border-radius: 50%;
-    border: 2px solid rgba(125,212,200,0.55);
-    animation: pulse 1.8s ease-out infinite;
+  /* Big round buttons */
+  .big {
+    width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; position: relative;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.35);
   }
+  .big svg { width: 48px; height: 48px; color: #fff; }
+  .big.teal { background: radial-gradient(circle at 35% 30%, #7DD4C8, #2D7A70 72%); box-shadow: 0 10px 26px rgba(61,155,143,0.45); }
+  .big.terra { background: radial-gradient(circle at 35% 30%, #E39B7C, #A8624A 72%); box-shadow: 0 10px 26px rgba(198,123,92,0.45); }
+  .big.sand { background: radial-gradient(circle at 35% 30%, #F2EDE3, #C9BBA0 72%); }
+  .big.sand svg { color: #1F5C54; }
+  .big.xl { width: 116px; height: 116px; } .big.xl svg { width: 58px; height: 58px; }
+  .big.md { width: 64px; height: 64px; } .big.md svg { width: 30px; height: 30px; }
+
+  /* Idle stone */
+  .stone { color: var(--teal-glow); width: 92px; height: 92px; filter: drop-shadow(0 8px 18px rgba(125,212,200,0.35)); }
+  .hint-row { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; justify-content: center; gap: 18px; }
+  .hint-row svg { width: 22px; height: 22px; color: rgba(255,255,255,0.45); }
+
+  /* Listening ring */
+  .ring { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
+  .ring::before, .ring::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2.5px solid rgba(125,212,200,0.55); animation: pulse 1.8s ease-out infinite; }
   .ring::after { animation-delay: .9s; }
   @keyframes pulse { 0% { transform: scale(0.72); opacity: 1; } 100% { transform: scale(1.18); opacity: 0; } }
-  .ring .core { width: 66px; height: 66px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #7DD4C8, #2D7A70 70%); display: grid; place-items: center; box-shadow: 0 6px 20px rgba(61,155,143,0.45); }
-  .ring .core svg { width: 30px; height: 30px; color: #fff; }
-  .wave { display: flex; gap: 3px; align-items: center; height: 16px; margin-top: 12px; }
-  .wave i { width: 3px; border-radius: 2px; background: var(--teal-glow); animation: bar 1s ease-in-out infinite; height: 40%; }
-  .wave i:nth-child(2){ animation-delay:.1s } .wave i:nth-child(3){ animation-delay:.2s } .wave i:nth-child(4){ animation-delay:.3s } .wave i:nth-child(5){ animation-delay:.4s } .wave i:nth-child(6){ animation-delay:.5s } .wave i:nth-child(7){ animation-delay:.6s }
-  @keyframes bar { 0%,100% { height: 30%; } 50% { height: 100%; } }
-  .face .say-big { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.2; margin-top: 14px; }
+  .dots { display: flex; gap: 6px; } .dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.7); animation: blink 1.2s ease-in-out infinite; }
+  .dots i:nth-child(2){ animation-delay:.2s } .dots i:nth-child(3){ animation-delay:.4s }
+  @keyframes blink { 0%,100% { opacity: .25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
 
-  /* reply bubbles */
-  .reply { position: absolute; inset: 30px 12px 26px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
-  .bub { border-radius: 14px; padding: 9px 11px; font-size: 11.5px; line-height: 1.35; }
-  .bub.child { background: rgba(255,255,255,0.10); color: rgba(255,255,255,0.86); align-self: flex-end; border-bottom-right-radius: 4px; max-width: 88%; }
-  .bub.peb { background: rgba(125,212,200,0.16); border: 1px solid rgba(125,212,200,0.28); color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; max-width: 94%; display: grid; grid-template-columns: 18px 1fr; gap: 7px; }
-  .bub.peb svg { width: 18px; height: 18px; color: var(--teal-glow); margin-top: 1px; }
-  .bub .fr { color: var(--amber); font-weight: 600; }
-  .bub .en { font-family: var(--font-display); font-weight: 800; font-size: 15px; display: block; margin: 2px 0; }
-  .replay { align-self: center; margin-top: 4px; font-size: 9.5px; font-weight: 600; color: rgba(255,255,255,0.6); display: inline-flex; gap: 6px; align-items: center; }
-  .replay i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5); display: inline-block; }
+  /* Tile grids (Learn, Calm) */
+  .tiles { position: absolute; inset: 30px 12px 12px; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 10px; }
+  .tile { border-radius: 22px; display: grid; place-items: center; position: relative; overflow: hidden; }
+  .tile svg { width: 44px; height: 44px; color: #fff; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.25)); }
+  .tile::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.22), transparent 55%); }
+  .tile.on { outline: 3px solid rgba(255,255,255,0.85); outline-offset: -3px; }
+  .c1 { background: linear-gradient(140deg, #D4A843, #A8624A); }
+  .c2 { background: linear-gradient(140deg, #6B9AC4, #2D7A70); }
+  .c3 { background: linear-gradient(140deg, #8B7BB5, #C98A8A); }
+  .c4 { background: linear-gradient(140deg, #3D9B8F, #1F5C54); }
+  .rain-t { background: linear-gradient(180deg, #2A3F4E, #172530); }
+  .tide-t { background: linear-gradient(180deg, #2D7A70, #1F5C54); }
+  .seed-t { background: linear-gradient(180deg, #D4A843, #A8624A); }
+  .snow-t { background: linear-gradient(180deg, #8B7BB5, #4A3F72); }
+  .tile.wide { grid-column: span 2; }
+  .tile .photo { width: 100%; height: 100%; display: grid; place-items: center; font-weight: 800; font-size: 28px; color: rgba(255,255,255,0.9); }
 
-  /* selector list */
-  .list { position: absolute; inset: 34px 0 0; padding: 0 12px; display: flex; flex-direction: column; gap: 7px; }
-  .list .hd { font-family: var(--font-display); font-weight: 800; font-size: 14px; padding: 2px 4px 4px; display: flex; justify-content: space-between; align-items: baseline; }
-  .list .hd small { font-family: var(--font-body); font-weight: 500; font-size: 9px; color: rgba(255,255,255,0.55); }
-  .row { display: grid; grid-template-columns: 36px 1fr auto; gap: 9px; align-items: center; padding: 6px; border-radius: 12px; background: rgba(255,255,255,0.06); }
-  .row.on { background: rgba(125,212,200,0.18); outline: 1px solid rgba(125,212,200,0.35); }
-  .row .cov { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 12px; }
-  .row .ttl { font-size: 11px; font-weight: 600; line-height: 1.15; }
-  .row .ttl small { display: block; font-weight: 400; font-size: 9px; color: rgba(255,255,255,0.6); margin-top: 2px; }
-  .row .dur { font-size: 9px; color: rgba(255,255,255,0.6); }
-  .cov.c1 { background: linear-gradient(140deg, #D4A843, #A8624A); }
-  .cov.c2 { background: linear-gradient(140deg, #6B9AC4, #2D7A70); }
-  .cov.c3 { background: linear-gradient(140deg, #8B7BB5, #C98A8A); }
-  .cov.c4 { background: linear-gradient(140deg, #3D9B8F, #1F5C54); }
-
-  /* now playing */
-  .np { position: absolute; inset: 26px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 18px; text-align: center; }
-  .np .art { width: 110px; height: 110px; border-radius: 22px; box-shadow: 0 10px 26px rgba(0,0,0,0.4); display: grid; place-items: center; }
-  .np .art svg { width: 40px; height: 40px; color: rgba(255,255,255,0.9); }
-  .np .ttl { font-family: var(--font-display); font-weight: 800; font-size: 14px; margin-top: 14px; }
-  .np .sub { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 2px; }
-  .np .bar { width: 130px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.18); margin-top: 14px; position: relative; }
+  /* Now playing */
+  .np { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  .np .art { width: 116px; height: 116px; border-radius: 28px; display: grid; place-items: center; box-shadow: 0 12px 28px rgba(0,0,0,0.4); }
+  .np .art svg { width: 54px; height: 54px; color: #fff; }
+  .np .bar { width: 130px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); position: relative; }
   .np .bar::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: var(--teal-glow); border-radius: 2px; }
-  .np .ctl { display: flex; gap: 22px; margin-top: 12px; align-items: center; }
-  .np .ctl i { width: 12px; height: 12px; border-left: 2px solid rgba(255,255,255,0.7); border-bottom: 2px solid rgba(255,255,255,0.7); transform: rotate(45deg); display: inline-block; }
-  .np .ctl i.r { transform: rotate(-135deg); }
-  .np .ctl b { width: 30px; height: 30px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
-  .np .ctl b::after { content: ''; width: 8px; height: 10px; border-left: 3px solid #1F5C54; border-right: 3px solid #1F5C54; }
 
-  /* calm tiles */
-  .tiles { position: absolute; inset: 34px 12px 12px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 8px; }
-  .tile { border-radius: 16px; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 8px; font-family: var(--font-display); font-weight: 700; font-size: 10.5px; }
-  .tile.rain { background: linear-gradient(180deg, #2A3F4E, #172530); }
-  .tile.tide { background: linear-gradient(180deg, #2D7A70, #1F5C54); grid-column: span 2; }
-  .tile.seeds { background: linear-gradient(180deg, #D4A843, #A8624A); }
-  .tile.snow { background: linear-gradient(180deg, #8B7BB5, #4A3F72); }
-  .tile.lantern { background: linear-gradient(180deg, #C67B5C, #6E3B29); grid-column: span 2; }
-  .tile::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18), transparent 55%); }
-
-  /* raindrops full face */
+  /* Rain full face */
   .rain-face { background: linear-gradient(180deg, #24384A 0%, #101B25 100%); }
   .drop { position: absolute; top: -20px; width: 2px; height: 22px; border-radius: 2px; background: linear-gradient(180deg, rgba(255,255,255,0), rgba(200,230,240,0.7)); animation: fall linear infinite; }
   @keyframes fall { to { transform: translateY(300px); } }
   .ripple { position: absolute; bottom: 34px; border-radius: 50%; border: 1px solid rgba(200,230,240,0.35); animation: rip 2.4s ease-out infinite; }
   @keyframes rip { 0% { width: 4px; height: 2px; opacity: .9; } 100% { width: 60px; height: 22px; opacity: 0; } }
-  .rain-face .foot { color: rgba(255,255,255,0.45); }
 
-  /* hello hold */
-  .hold { position: relative; width: 120px; height: 120px; display: grid; place-items: center; }
+  /* Hello */
+  .hold { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
   .hold svg.prog { position: absolute; inset: 0; transform: rotate(-90deg); }
-  .hold .core { width: 88px; height: 88px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #E39B7C, #A8624A 70%); display: grid; place-items: center; box-shadow: 0 8px 22px rgba(198,123,92,0.45); }
-  .hold .core svg { width: 34px; height: 34px; color: #fff; }
-  .sent .core { background: radial-gradient(circle at 35% 30%, #7DD4C8, #2D7A70 70%); box-shadow: 0 8px 22px rgba(61,155,143,0.45); }
-  .chips { display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
-  .chip { font-size: 9.5px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.12); color: #fff; }
+  .faces { display: flex; gap: 10px; justify-content: center; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.7); }
+  .avatar.a1 { background: linear-gradient(140deg, #C98A8A, #8B7BB5); }
+  .avatar.a2 { background: linear-gradient(140deg, #6B9AC4, #3D9B8F); }
+  .avatar.lg { width: 56px; height: 56px; font-size: 20px; }
+  .check { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: var(--teal-glow); display: grid; place-items: center; }
+  .big .check { position: absolute; right: 2px; bottom: 2px; width: 30px; height: 30px; border: 3px solid #0B1F1D; }
+  .big .check svg { width: 15px; height: 15px; color: #06100F; }
 
-  /* charging / resting */
-  .rest .center { gap: 6px; }
-  .rest .zz { font-family: var(--font-display); font-weight: 800; font-size: 13px; color: rgba(255,255,255,0.85); }
+  /* Zzz */
+  .zz { position: absolute; font-weight: 800; color: rgba(255,255,255,0.55); animation: floatz 2.6s ease-in-out infinite; }
+  .zz.z1 { font-size: 14px; right: 62px; top: 74px; } .zz.z2 { font-size: 18px; right: 48px; top: 56px; animation-delay: .6s; } .zz.z3 { font-size: 22px; right: 30px; top: 34px; animation-delay: 1.2s; }
+  @keyframes floatz { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-6px); opacity: .9; } }
 
   /* ---------- Modal zoom ---------- */
   .modal { position: fixed; inset: 0; background: rgba(20,30,31,0.72); backdrop-filter: blur(6px); display: none; place-items: center; z-index: 50; padding: 24px; }
@@ -156,16 +141,22 @@
   .modal .zoom { transform: scale(1.6); transform-origin: center; cursor: zoom-out; }
   @media (max-width: 560px) { .modal .zoom { transform: scale(1.15); } }
 
-  /* ---------- Spec strip ---------- */
+  /* ---------- Page chrome ---------- */
   .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   @media (max-width: 860px) { .specs { grid-template-columns: repeat(2, 1fr); } }
   .specs .card { padding: 18px 20px; }
   .specs .card b { display: block; font-family: var(--font-display); font-weight: 800; font-size: 19px; color: var(--teal-deep); white-space: nowrap; }
   .specs .card span { font-size: 13px; color: var(--warm-gray); }
-
   .rules .card p { font-size: 14.5px; }
   .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .sw { width: 34px; height: 34px; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
+
+  /* Icon sheet */
+  .iconsheet { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 14px; }
+  .ico { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12px; color: var(--warm-gray); text-align: center; }
+  .ico .box { width: 68px; height: 68px; border-radius: 20px; display: grid; place-items: center; background: var(--teal-deep); }
+  .ico .box svg { width: 34px; height: 34px; color: #fff; }
+  .ico b { font-family: var(--font-display); font-weight: 700; color: var(--charcoal); }
 </style>
 </head>
 <body>
@@ -177,9 +168,23 @@
     <path fill="currentColor" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
     <path fill="white" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
   </symbol>
-  <symbol id="mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M12 17v4M9 21h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-  <symbol id="note" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></symbol>
-  <symbol id="heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="currentColor"/></symbol>
+  <!-- Icon set: 24 grid, 2.4 stroke, round caps. One shape each, no inner detail. -->
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M12 17.5v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M9.5 17.5V5l10-2.2v12" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="3" fill="currentColor"/><circle cx="16.5" cy="15" r="3" fill="currentColor"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.5" height="14" rx="1.5" fill="currentColor"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5" fill="currentColor"/></symbol>
+  <symbol id="i-replay" viewBox="0 0 24 24"><path d="M5 12a7 7 0 1 0 2-4.9" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M4.5 3.5v4.5H9" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s-6.5 7-6.5 11.5a6.5 6.5 0 0 0 13 0C18.5 10 12 3 12 3z" fill="currentColor"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 9c3-3 6-3 9 0s6 3 9 0M3 15c3-3 6-3 9 0s6 3 9 0" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-seed" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-dasharray="1.5 3" stroke-linecap="round"/><circle cx="12" cy="9" r="1.8" fill="currentColor"/><path d="M12 11v9.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 9.5c0 6-8 11-8 11z" fill="currentColor"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3" fill="currentColor"/><path d="M16 10.5l5-2.5v8l-5-2.5z" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6.2 12 3 3 0 0 0 7 18z" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linejoin="round"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" fill="currentColor"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 8-11h-6z" fill="currentColor"/></symbol>
 </svg>
 
 <nav class="nav">
@@ -199,15 +204,15 @@
 <header class="intro">
   <div class="wrap grid">
     <div>
-      <div class="eyebrow">Face mockups · 410 × 502 · shown at half size</div>
+      <div class="eyebrow">Face mockups · 410 × 502 · shown at half size · designed for ages 3+</div>
       <h1>What the child sees.</h1>
-      <p class="lede" style="margin-top:16px">Twelve states, one language. Big type, one idea per face, Pebble's ripple stone as the only mascot. Click any face to see it at the size it will be on the wrist.</p>
+      <p class="lede" style="margin-top:16px">Twelve states, no reading required. One big shape per face, icons before words, and the only words that appear are the ones Pebble is teaching. Click any face to see it at wrist size.</p>
     </div>
     <div class="specs">
-      <div class="card"><b>2.06"</b><span>AMOLED, 410 × 502, ~315 ppi</span></div>
-      <div class="card"><b>33 × 40 mm</b><span>visible face, portrait</span></div>
-      <div class="card"><b>2 + 1</b><span>side buttons + touch</span></div>
-      <div class="card"><b>600 nits</b><span>peak brightness</span></div>
+      <div class="card"><b>1 shape</b><span>per face, centred</span></div>
+      <div class="card"><b>≥ 96 px</b><span>tap targets (1× scale: ≥ 9 mm)</span></div>
+      <div class="card"><b>0 menus</b><span>swipe sideways, press to go home</span></div>
+      <div class="card"><b>2 words</b><span>at most, and only when teaching</span></div>
     </div>
   </div>
 </header>
@@ -216,231 +221,242 @@
   <div class="wrap">
     <div class="shelf">
 
-      <!-- 1 IDLE -->
+      <!-- 1 HOME -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>MAR 14</span><span class="batt">82% <i></i></span></div>
+            <span class="clock">14:07</span><span class="batt"></span>
             <div class="center">
-              <div class="t-time">14:07</div>
-              <div class="t-date">Mardi · Pebble is here</div>
-              <svg class="pebble-mark" style="margin-top:22px"><use href="#ripple-stone"/></svg>
+              <svg class="stone"><use href="#ripple-stone"/></svg>
             </div>
-            <div class="foot">press once to talk · swipe for Learn and Calm</div>
+            <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
           </div>
         </div>
-        <div class="cap"><b>Idle</b><span>Dark mesh keeps the AMOLED cheap to run. Dims at 10 s, sleeps at 30 s, wakes on raise or press.</span></div>
+        <div class="cap"><b>Home</b><span>Pebble, and nothing else. Tap the stone or press the button to talk. The three small icons hint at the swipe order: songs, calm, hello. The clock is for the grown-up.</span></div>
       </div>
 
       <!-- 2 LISTENING -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>LISTENING</span><span class="batt">82% <i></i></span></div>
+            <span class="batt"></span>
             <div class="center">
-              <div class="ring"><div class="core"><svg><use href="#mic"/></svg></div></div>
-              <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="say-big">Je t'écoute…</div>
+              <div class="ring"><div class="big teal"><svg><use href="#i-mic"/></svg></div></div>
+              <div class="dots"><i></i><i></i><i></i></div>
             </div>
-            <div class="foot">audio leaves the device only while the ring pulses</div>
           </div>
         </div>
-        <div class="cap"><b>Listening</b><span>After "Hey Pebble" or one press. Ring pulses teal; up to 8 s or until silence.</span></div>
+        <div class="cap"><b>Listening</b><span>Pulsing ring and three bouncing dots. No text: a three-year-old learns "the ring means it hears me" in one go. Audio leaves the device only while the ring pulses.</span></div>
       </div>
 
-      <!-- 3 REPLY -->
+      <!-- 3 REPLY FR->EN -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face">
-            <div class="status"><span>PEBBLE</span><span class="batt">81% <i></i></span></div>
-            <div class="reply">
-              <div class="bub child">Comment on dit « papillon » ?</div>
-              <div class="bub peb"><svg><use href="#ripple-stone"/></svg><div><span class="fr">Papillon</span> is<span class="en">butterfly</span>Want to hear it again, slowly?</div></div>
-              <div class="replay"><i></i> tap to replay</div>
+            <span class="batt"></span>
+            <div class="center" style="gap:14px">
+              <div class="word fr">papillon</div>
+              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="word">butterfly</div>
+              <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Reply</b><span>Both languages on screen while Pebble speaks. Amber for the French word, big Nunito for the English.</span></div>
+        <div class="cap"><b>Pebble answers</b><span>The two words are the whole face. Amber is French, white is English, and Pebble says both aloud. The one button repeats it slowly. No chat bubbles, no sentences.</span></div>
       </div>
 
       <!-- 4 REPLY EN->FR -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face">
-            <div class="status"><span>PEBBLE</span><span class="batt">81% <i></i></span></div>
-            <div class="reply">
-              <div class="bub child">How do I say "I'm hungry"?</div>
-              <div class="bub peb"><svg><use href="#ripple-stone"/></svg><div>You can say<span class="en" style="color:var(--amber)">J'ai faim</span>Try it with me: <i>j'ai… faim</i>.</div></div>
-              <div class="replay"><i></i> tap to replay</div>
+            <span class="batt"></span>
+            <div class="center" style="gap:14px">
+              <div class="word sm" style="color:rgba(255,255,255,0.8)">I'm hungry</div>
+              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="word fr">J'ai faim</div>
+              <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Reply, the other way</b><span>Same layout, languages swapped. Pebble offers a next step, never a quiz.</span></div>
+        <div class="cap"><b>The other way</b><span>Same face, languages swapped. Pebble's follow-up ("try it with me") is spoken, never written, so the screen stays two lines.</span></div>
       </div>
 
-      <!-- 5 LEARN SELECTOR -->
+      <!-- 5 LEARN -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face">
-            <div class="status"><span>LEARN</span><span class="batt">80% <i></i></span></div>
-            <div class="list">
-              <div class="hd">Songs <small>4 on Pocket</small></div>
-              <div class="row on"><div class="cov c1">Al</div><div class="ttl">Alouette<small>Comptine · Maman's playlist</small></div><div class="dur">1:42</div></div>
-              <div class="row"><div class="cov c2">Fr</div><div class="ttl">Frère Jacques<small>Comptine</small></div><div class="dur">1:10</div></div>
-              <div class="row"><div class="cov c3">Co</div><div class="ttl">Colours in French<small>Video · 2 min</small></div><div class="dur">2:05</div></div>
-              <div class="row"><div class="cov c4">Bo</div><div class="ttl">Bonjour song<small>Class · Mme Léa</small></div><div class="dur">0:58</div></div>
+            <span class="batt"></span>
+            <div class="tiles">
+              <div class="tile c1 on"><svg><use href="#i-note"/></svg></div>
+              <div class="tile c2"><svg><use href="#i-note"/></svg></div>
+              <div class="tile c3"><svg><use href="#i-video"/></svg></div>
+              <div class="tile c4"><svg><use href="#i-note"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Learn selector</b><span>Whatever a parent uploaded. Cover, title, source, length. Scrolls with the crown-side button or a swipe.</span></div>
+        <div class="cap"><b>Songs</b><span>Four big colour tiles, a note or a film icon, no titles. A parent picks each tile's colour in the app, so "the yellow one" is Alouette at home and in class. Swipe up for the next four.</span></div>
       </div>
 
-      <!-- 6 NOW PLAYING -->
+      <!-- 6 PLAYING -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>PLAYING</span><span class="batt">80% <i></i></span></div>
+            <span class="batt"></span>
             <div class="np">
-              <div class="art cov c1"><svg><use href="#note"/></svg></div>
-              <div class="ttl">Alouette</div>
-              <div class="sub">from microSD · offline</div>
+              <div class="art c1"><svg><use href="#i-note"/></svg></div>
               <div class="bar"></div>
-              <div class="ctl"><i></i><b></b><i class="r"></i></div>
+              <div class="big md sand"><svg><use href="#i-pause"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Now playing</b><span>Plays from the card, no network. Screen at 40 percent to save the battery for the song.</span></div>
+        <div class="cap"><b>Playing</b><span>The tile they chose, grown large, a progress line and one pause button. Plays from the microSD card, so it works with no network at all.</span></div>
       </div>
 
-      <!-- 7 CALM GALLERY -->
+      <!-- 7 CALM -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face">
-            <div class="status"><span>CALM</span><span class="batt">79% <i></i></span></div>
+            <span class="batt"></span>
             <div class="tiles">
-              <div class="tile rain">Rain</div>
-              <div class="tile seeds">Seeds</div>
-              <div class="tile tide">Slow tide</div>
-              <div class="tile snow">Snow</div>
-              <div class="tile lantern" style="grid-column:span 1">Lantern</div>
+              <div class="tile rain-t"><svg><use href="#i-drop"/></svg></div>
+              <div class="tile seed-t"><svg><use href="#i-seed"/></svg></div>
+              <div class="tile tide-t wide"><svg><use href="#i-wave"/></svg></div>
+              <div class="tile snow-t"><svg><use href="#i-snow"/></svg></div>
+              <div class="tile c3"><div class="photo">👶</div></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Calm gallery</b><span>Large tiles, one word each, no text needed to choose. Parents add loops; the starter five ship in firmware.</span></div>
+        <div class="cap"><b>Calm</b><span>Rain, seeds, tide, snow, and a family-photo tile parents can fill from the app. Icons only. This is the face a parent opens for them mid-tantrum, then hands over.</span></div>
       </div>
 
       <!-- 8 RAIN -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
-          <div class="face rain-face" id="rain">
-            <div class="foot">any press returns home</div>
-          </div>
+          <div class="face rain-face" id="rain"></div>
         </div>
-        <div class="cap"><b>Calm: rain</b><span>Full-face loop with a soft sound bed. Brightness eases down after 30 s. No timer, no reward, nothing to finish.</span></div>
+        <div class="cap"><b>Calm: rain</b><span>Full-face loop with a soft sound bed and nothing on top of it. Brightness eases down after 30 seconds. Any button press goes home.</span></div>
       </div>
 
       <!-- 9 HELLO HOLD -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side" style="background:#C67B5C"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>HELLO</span><span class="batt">79% <i></i></span></div>
-            <div class="center">
+            <span class="batt"></span>
+            <div class="center" style="gap:16px">
               <div class="hold" id="hold">
-                <svg class="prog" viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="5"/><circle id="holdArc" cx="60" cy="60" r="54" fill="none" stroke="#E39B7C" stroke-width="5" stroke-linecap="round" stroke-dasharray="339" stroke-dashoffset="220"/></svg>
-                <div class="core"><svg><use href="#mic"/></svg></div>
+                <svg class="prog" viewBox="0 0 132 132"><circle cx="66" cy="66" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/><circle id="holdArc" cx="66" cy="66" r="60" fill="none" stroke="#E39B7C" stroke-width="6" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="245"/></svg>
+                <div class="big terra"><svg><use href="#i-heart"/></svg></div>
               </div>
-              <div class="say-big">Keep holding…</div>
-              <div class="chips"><span class="chip">Mamie</span><span class="chip">Papi</span></div>
+              <div class="faces"><span class="avatar a1">M</span><span class="avatar a2">P</span></div>
             </div>
-            <div class="foot">let go to send · 20 s max</div>
           </div>
         </div>
-        <div class="cap"><b>Hello: hold to talk</b><span>Hold the terracotta button 1.5 s. A haptic tick, then the ring fills while they talk. Try it: press and hold the face below.</span></div>
+        <div class="cap"><b>Hello: hold to talk</b><span>Hold the terracotta button; the ring fills while they talk. The two faces are who will hear it, as photos from the app. Try it: press and hold the heart.</span></div>
       </div>
 
       <!-- 10 HELLO SENT -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>HELLO</span><span class="batt">79% <i></i></span></div>
-            <div class="center sent">
-              <div class="hold"><div class="core"><svg><use href="#heart"/></svg></div></div>
-              <div class="say-big">Sent to Mamie and Papi</div>
-              <div class="t-date">They'll hear it in PebblePath</div>
+            <span class="batt"></span>
+            <div class="center" style="gap:18px">
+              <div class="big xl teal"><svg><use href="#i-heart"/></svg><span class="check"><svg><use href="#i-check"/></svg></span></div>
+              <div class="faces"><span class="avatar lg a1">M</span><span class="avatar lg a2">P</span></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Hello: sent</b><span>Only approved contacts, set by a parent in the app. No replies to the device in v0.1.</span></div>
+        <div class="cap"><b>Hello: sent</b><span>A green heart with a tick, and the faces it went to. Pebble says "sent to Mamie and Papi" out loud. Nothing to read, nothing to dismiss; it returns home by itself.</span></div>
       </div>
 
       <!-- 11 RESTING -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
-          <div class="face rest">
-            <div class="status"><span>CHARGING</span><span class="batt">24% <i class="low"></i></span></div>
+          <div class="face">
+            <span class="batt low"></span>
+            <span class="zz z1">z</span><span class="zz z2">z</span><span class="zz z3">z</span>
             <div class="center">
-              <svg class="pebble-mark" style="opacity:.8"><use href="#ripple-stone"/></svg>
-              <div class="zz">Pebble is resting</div>
-              <div class="t-date">Syncing 2 new songs</div>
+              <svg class="stone" style="opacity:.6;filter:none"><use href="#ripple-stone"/></svg>
+              <svg style="width:28px;height:28px;color:var(--teal-glow);margin-top:-4px"><use href="#i-bolt"/></svg>
             </div>
-            <div class="foot">ready in about an hour</div>
           </div>
         </div>
-        <div class="cap"><b>Resting</b><span>On the charger: near-black face, media sync and firmware updates happen here, never mid-play.</span></div>
+        <div class="cap"><b>Resting</b><span>On the charger: a sleepy stone, floating z's, a small bolt. Songs and updates sync now, never mid-play. Near-black face to keep the AMOLED cool.</span></div>
       </div>
 
       <!-- 12 OFFLINE -->
       <div class="slot">
         <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
           <div class="face mesh-dark">
-            <div class="status"><span>NO WI-FI</span><span class="batt">64% <i></i></span></div>
-            <div class="center">
-              <svg class="pebble-mark"><use href="#ripple-stone"/></svg>
-              <div class="say-big">I can't hear the cloud right now</div>
-              <div class="t-date">Songs and Calm still work</div>
+            <span class="batt"></span>
+            <div class="center" style="gap:18px">
+              <div class="big sand"><svg><use href="#i-cloud-off"/></svg></div>
+              <div class="hint-row" style="position:static;gap:22px"><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-note"/></svg><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-drop"/></svg></div>
             </div>
-            <div class="foot">swipe for Learn · swipe again for Calm</div>
           </div>
         </div>
-        <div class="cap"><b>Offline</b><span>Translate and Hello need Wi-Fi. The face says so in Pebble's voice and points at what still works.</span></div>
+        <div class="cap"><b>No Wi-Fi</b><span>A crossed-out cloud, and lit icons for what still works: songs and calm. Pebble says it in words ("I can't hear the cloud right now"); the face does not.</span></div>
       </div>
 
     </div>
   </div>
 </section>
 
-<section class="rules" style="background:var(--sand-light)">
+<section style="background:var(--sand-light)">
   <div class="wrap">
-    <div class="eyebrow">Face rules</div>
-    <h2 style="margin-bottom:22px">How the language holds together on 33 mm</h2>
+    <div class="eyebrow">Icon set</div>
+    <h2 style="margin-bottom:8px">Fourteen shapes, one weight</h2>
+    <p class="muted" style="margin-bottom:22px;max-width:70ch">Every icon is a single filled or 2.4-stroke silhouette on a 24 grid with round caps, no inner detail, so it still reads at 44 px on the wrist and at 22 px as a hint. The ripple stone is the only "character". Nothing has a face.</p>
+    <div class="iconsheet">
+      <div class="ico"><span class="box"><svg><use href="#ripple-stone"/></svg></span><b>Pebble</b>home, talk</div>
+      <div class="ico"><span class="box"><svg><use href="#i-mic"/></svg></span><b>Mic</b>listening</div>
+      <div class="ico"><span class="box"><svg><use href="#i-replay"/></svg></span><b>Again</b>repeat slowly</div>
+      <div class="ico"><span class="box"><svg><use href="#i-note"/></svg></span><b>Note</b>song</div>
+      <div class="ico"><span class="box"><svg><use href="#i-video"/></svg></span><b>Film</b>video</div>
+      <div class="ico"><span class="box"><svg><use href="#i-play"/></svg></span><b>Play</b></div>
+      <div class="ico"><span class="box"><svg><use href="#i-pause"/></svg></span><b>Pause</b></div>
+      <div class="ico"><span class="box"><svg><use href="#i-drop"/></svg></span><b>Drop</b>calm, rain</div>
+      <div class="ico"><span class="box"><svg><use href="#i-wave"/></svg></span><b>Wave</b>tide</div>
+      <div class="ico"><span class="box"><svg><use href="#i-seed"/></svg></span><b>Seed</b>dandelion</div>
+      <div class="ico"><span class="box"><svg><use href="#i-snow"/></svg></span><b>Snow</b></div>
+      <div class="ico"><span class="box" style="background:var(--terracotta)"><svg><use href="#i-heart"/></svg></span><b>Heart</b>hello</div>
+      <div class="ico"><span class="box"><svg><use href="#i-cloud-off"/></svg></span><b>No cloud</b>offline</div>
+      <div class="ico"><span class="box"><svg><use href="#i-bolt"/></svg></span><b>Bolt</b>charging</div>
+    </div>
+  </div>
+</section>
+
+<section class="rules">
+  <div class="wrap">
+    <div class="eyebrow">Face rules for ages three and up</div>
+    <h2 style="margin-bottom:22px">How it stays usable by someone who cannot read</h2>
     <div class="grid grid-3">
       <div class="card">
-        <h3>One idea per face</h3>
-        <p>Every state has a single headline in Nunito 800 and at most one line of Inter under it. If a face needs a paragraph, it is two faces.</p>
+        <h3>One shape per face</h3>
+        <p>A single centred object tells the child what this face is for. If a state needs two things on screen, one of them is spoken instead.</p>
       </div>
       <div class="card">
-        <h3>Colour means something</h3>
-        <p>Teal glow is Pebble talking or listening. Amber is the French word (the Language domain colour in the app). Terracotta is the one action that leaves the device: Hello.</p>
+        <h3>Words only when teaching</h3>
+        <p>The only text on any child-facing face is the pair Pebble is teaching. Status, names, titles and errors are all spoken by Pebble or shown to the parent in the app.</p>
+      </div>
+      <div class="card">
+        <h3>Colour is the label</h3>
+        <p>Teal glow: Pebble is listening or talking. Amber: the French word. Terracotta: the one thing that leaves the device, a hello. Parents choose a colour per song, so tiles never need titles.</p>
         <div class="swatches">
           <span class="sw" style="background:#7DD4C8"></span><span class="sw" style="background:#3D9B8F"></span><span class="sw" style="background:#1F5C54"></span>
           <span class="sw" style="background:#D4A843"></span><span class="sw" style="background:#C67B5C"></span><span class="sw" style="background:#E8DCC8"></span>
         </div>
       </div>
       <div class="card">
-        <h3>Dark, but warm</h3>
-        <p>The app avoids dark mode by default; the wrist is the exception, because black pixels are free on AMOLED. The mesh sheens keep it PebblePath rather than generic-gadget black.</p>
+        <h3>Big targets, no precision</h3>
+        <p>Every tappable thing is at least 96 px at 1×, about 9 mm. Tiles fill the face in twos. Nothing sits in a corner. Damp thumbs and a bouncing lap still work.</p>
       </div>
       <div class="card">
-        <h3>The ripple stone is the only character</h3>
-        <p>No faces, no eyes, no cartoon reactions. Pebble is a stone on still water, the same mark as the app's advisor. It pulses, it glows, it never emotes.</p>
+        <h3>Buttons are the safety net</h3>
+        <p>Press: talk. Hold: hello. Any press from anywhere: home. A child who gets lost in a swipe is one press from the stone.</p>
       </div>
       <div class="card">
-        <h3>Buttons beat gestures</h3>
-        <p>Two physical buttons carry the core loop: press to talk, hold to send a hello. Swipes are for browsing only, so a three-year-old with damp hands can still use it.</p>
-      </div>
-      <div class="card">
-        <h3>Type sizes, at 1×</h3>
-        <p>Time 104 px · headline 30 px · body 23 px · captions 19 px. Nothing under 18 px anywhere on the face.</p>
+        <h3>Nothing to finish, nothing to win</h3>
+        <p>No streaks, stars or timers. A song ends and the tile comes back. A calm loop runs until someone presses. The device never asks the child for anything.</p>
       </div>
     </div>
   </div>
@@ -448,7 +464,7 @@
 
 <footer>
   <div class="wrap">
-    <span>Pebble Pocket · face mockups v0.1 · PebblePath</span>
+    <span>Pebble Pocket · face mockups v0.2 (ages 3+) · PebblePath</span>
     <a href="index.html" style="text-decoration:none">← Architecture</a>
   </div>
 </footer>
@@ -456,7 +472,6 @@
 <div class="modal" id="modal" aria-hidden="true"><div class="zoom" id="zoomHost"></div></div>
 
 <script>
-  // Raindrops
   (function () {
     var host = document.getElementById('rain');
     for (var i = 0; i < 26; i++) {
@@ -476,11 +491,10 @@
     }
   })();
 
-  // Hold-to-send demo
   (function () {
     var hold = document.getElementById('hold'), arc = document.getElementById('holdArc');
     if (!hold) return;
-    var t0 = null, raf = null, total = 339;
+    var t0 = null, raf = null, total = 377;
     function tick(now) {
       if (t0 === null) t0 = now;
       var p = Math.min(1, (now - t0) / 4000);
@@ -488,12 +502,11 @@
       if (p < 1) raf = requestAnimationFrame(tick);
     }
     function start(e) { e.preventDefault(); e.stopPropagation(); t0 = null; cancelAnimationFrame(raf); raf = requestAnimationFrame(tick); }
-    function stop() { cancelAnimationFrame(raf); arc.setAttribute('stroke-dashoffset', '220'); }
+    function stop() { cancelAnimationFrame(raf); arc.setAttribute('stroke-dashoffset', '245'); }
     hold.addEventListener('pointerdown', start);
     ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { hold.addEventListener(ev, stop); });
   })();
 
-  // Zoom modal
   (function () {
     var modal = document.getElementById('modal'), host = document.getElementById('zoomHost');
     document.querySelectorAll('[data-zoom]').forEach(function (w) {

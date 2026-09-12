@@ -2,10 +2,12 @@
 
 A pocket-sized, wearable Pebble: PebblePath's advisor on a 2.06" AMOLED watch board that listens for "Hey Pebble", answers in French or English in Pebble's voice, plays the family's learning songs, calms a hard moment, and sends a hello to approved contacts.
 
+**Start with `HANDOFF.md`** if you are a Claude Code session: it holds the full context, hardware gotchas, UI rules and the Phase 0 checklist.
+
 **Working documents (GitHub Pages):**
 
 - `docs/index.html` — system architecture, the four feature flows, hardware constraints, build plan
-- `docs/screens.html` — face mockups for every device state, at 0.5× with click-to-zoom
+- `docs/screens.html` — twelve face mockups designed for ages 3+ (icons first, words only when teaching), at 0.5× with click-to-zoom, plus the icon set and face rules
 
 Open them locally by double-clicking, or turn on GitHub Pages (Settings → Pages → Deploy from branch → `main` / `docs`) and they are served at `https://<org>.github.io/<repo>/`.
 
@@ -21,6 +23,8 @@ Open them locally by double-clicking, or turn on GitHub Pages (Settings → Page
 | Storage | microSD slot (media library lives here) |
 | Power | AXP2101 PMU, USB-C. About 1 h screen-on at full brightness, 3 to 4 h screen-off |
 | Carry | 22 mm flat-end strap slot with screw bar (per Waveshare outline drawing), neck lanyard adapter |
+
+GitHub: https://github.com/pebblepath/Pebble_Pocket
 
 ## Architecture in one paragraph
 
