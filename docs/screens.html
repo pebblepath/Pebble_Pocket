@@ -12,8 +12,8 @@
 <link rel="stylesheet" href="assets/pocket.css">
 <style>
   .intro { padding: 64px 0 40px; }
-  .intro .grid { grid-template-columns: 1.2fr 0.8fr; align-items: end; gap: 40px; }
-  @media (max-width: 860px) { .intro .grid { grid-template-columns: 1fr; } }
+  .intro .grid { grid-template-columns: 1fr; gap: 28px; }
+  .intro .lede { max-width: 62ch; }
 
   /* ---------- Watch frame ---------- */
   /* Drawn from Waveshare's outline drawing, straps removed.
@@ -76,11 +76,8 @@
       radial-gradient(ellipse 70% 50% at 50% 105%, rgba(198,123,92,0.30), transparent 65%),
       linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
   }
-  /* Only the battery survives from the old status bar; parents read the rest in the app */
-  /* Corner status sits inside the R9.2 curve (at 0.5×, x ≥ 20 px at the top edge would still clip) */
-  .face .batt { position: absolute; top: 17px; right: 30px; width: 18px; height: 9px; border: 1.5px solid rgba(255,255,255,0.55); border-radius: 3px; }
-  .face .batt::after { content: ''; position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 62%; background: var(--teal-glow); border-radius: 1px; }
-  .face .batt.low::after { width: 18%; background: var(--terracotta); }
+  /* No battery indicator on any face: the Pocket is used in short bursts and the wearer should not be distracted.
+     The clock sits inside the R9.2 corner curve (at 0.5×, x ≥ 20 px at the top edge would still clip). */
   .face .clock { position: absolute; top: 14px; left: 30px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-body); }
 
   .face .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 16px; gap: 10px; }
@@ -102,7 +99,7 @@
   .big.md { width: 64px; height: 64px; } .big.md svg { width: 30px; height: 30px; }
 
   /* Idle stone */
-  .stone { color: var(--teal-glow); width: 92px; height: 92px; filter: drop-shadow(0 8px 18px rgba(125,212,200,0.35)); }
+  .stone { color: var(--teal-glow); width: 120px; height: 120px; filter: drop-shadow(0 8px 18px rgba(125,212,200,0.35)); }
   .hint-row { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; justify-content: center; gap: 18px; }
   .hint-row svg { width: 22px; height: 22px; color: rgba(255,255,255,0.45); }
 
@@ -138,12 +135,28 @@
   .np .bar { width: 130px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); position: relative; }
   .np .bar::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: var(--teal-glow); border-radius: 2px; }
 
-  /* Rain full face */
-  .rain-face { background: linear-gradient(180deg, #24384A 0%, #101B25 100%); }
-  .drop { position: absolute; top: -20px; width: 2px; height: 22px; border-radius: 2px; background: linear-gradient(180deg, rgba(255,255,255,0), rgba(200,230,240,0.7)); animation: fall linear infinite; }
-  @keyframes fall { to { transform: translateY(300px); } }
-  .ripple { position: absolute; bottom: 34px; border-radius: 50%; border: 1px solid rgba(200,230,240,0.35); animation: rip 2.4s ease-out infinite; }
-  @keyframes rip { 0% { width: 4px; height: 2px; opacity: .9; } 100% { width: 60px; height: 22px; opacity: 0; } }
+  /* Rain full face: a soft dusk scene behind two depth layers of rain, splashes on the water, drips on the glass */
+  .rain-face { background:
+      radial-gradient(ellipse 90% 38% at 50% -6%, rgba(125,212,200,0.20), transparent 70%),
+      linear-gradient(180deg, #213A4B 0%, #18303F 38%, #122735 62%, #0C1C26 100%); }
+  .rain-face .cloud { position: absolute; border-radius: 50%; background: rgba(176,206,220,0.24); filter: blur(9px); animation: drift 26s ease-in-out infinite alternate; }
+  .rain-face .cloud.k1 { width: 170px; height: 54px; top: 10px; left: -34px; }
+  .rain-face .cloud.k2 { width: 150px; height: 48px; top: 40px; right: -40px; animation-duration: 32s; animation-direction: alternate-reverse; }
+  @keyframes drift { to { transform: translateX(26px); } }
+  .rain-face .hills { position: absolute; left: 0; right: 0; bottom: 44px; width: 100%; height: 90px; }
+  .rain-face .water { position: absolute; left: 0; right: 0; bottom: 0; height: 52px;
+    background: linear-gradient(180deg, rgba(92,191,176,0.16), rgba(12,28,38,0.2) 40%, #0A1820 100%);
+    box-shadow: inset 0 1px 0 rgba(200,230,240,0.18); }
+  .rain-face .layer { position: absolute; inset: -40px -40px 0; transform: rotate(9deg); }
+  .drop { position: absolute; top: -30px; border-radius: 2px; background: linear-gradient(180deg, rgba(255,255,255,0), rgba(205,232,242,0.85)); animation: fall linear infinite; }
+  .drop.far { width: 1px; height: 13px; }
+  .drop.near { width: 2px; height: 30px; }
+  @keyframes fall { to { transform: translateY(330px); } }
+  .ripple { position: absolute; border-radius: 50%; border: 1px solid rgba(205,232,242,0.45); transform: translateX(-50%); animation: rip 2.2s ease-out infinite; }
+  @keyframes rip { 0% { width: 4px; height: 2px; opacity: .95; } 100% { width: 54px; height: 12px; opacity: 0; } }
+  .streak { position: absolute; width: 5px; height: 7px; border-radius: 50% 50% 45% 45%; background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.75), rgba(190,225,235,0.25) 60%, transparent 70%); animation: drip ease-in infinite; }
+  .streak::before { content: ''; position: absolute; left: 2px; bottom: 6px; width: 1px; height: 18px; background: linear-gradient(180deg, transparent, rgba(205,232,242,0.35)); }
+  @keyframes drip { 0%, 55% { transform: translateY(0); opacity: 0; } 60% { opacity: .9; } 100% { transform: translateY(120px); opacity: 0; } }
 
   /* Hello */
   .hold { position: relative; width: 132px; height: 132px; display: grid; place-items: center; }
@@ -161,7 +174,7 @@
 
   /* Zzz */
   .zz { position: absolute; font-weight: 800; color: rgba(255,255,255,0.55); animation: floatz 2.6s ease-in-out infinite; }
-  .zz.z1 { font-size: 14px; right: 62px; top: 74px; } .zz.z2 { font-size: 18px; right: 48px; top: 56px; animation-delay: .6s; } .zz.z3 { font-size: 22px; right: 30px; top: 34px; animation-delay: 1.2s; }
+  .zz.z1 { font-size: 14px; right: 50px; top: 50px; } .zz.z2 { font-size: 18px; right: 36px; top: 34px; animation-delay: .6s; } .zz.z3 { font-size: 22px; right: 22px; top: 16px; animation-delay: 1.2s; }
   @keyframes floatz { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-6px); opacity: .9; } }
 
   /* ---------- How it's held (motion sensor) ---------- */
@@ -190,11 +203,11 @@
   @media (max-width: 560px) { .modal .zoom { transform: scale(1.15); } }
 
   /* ---------- Page chrome ---------- */
-  .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  @media (max-width: 860px) { .specs { grid-template-columns: repeat(2, 1fr); } }
+  .specs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 860px) { .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .specs .card { padding: 18px 20px; }
   .specs .card b { display: block; font-family: var(--font-display); font-weight: 800; font-size: 19px; color: var(--teal-deep); white-space: nowrap; }
-  .specs .card span { font-size: 13px; color: var(--warm-gray); }
+  .specs .card span { display: block; margin-top: 4px; font-size: 13px; line-height: 1.45; color: var(--warm-gray); }
   .rules .card p { font-size: 14.5px; }
   .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .sw { width: 34px; height: 34px; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06); }
@@ -216,23 +229,24 @@
     <path fill="currentColor" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
     <path fill="white" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
   </symbol>
-  <!-- Icon set: 24 grid, 2.4 stroke, round caps. One shape each, no inner detail. -->
-  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="8.5" y="2.5" width="7" height="12" rx="3.5" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M12 17.5v4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
-  <symbol id="i-note" viewBox="0 0 24 24"><path d="M9.5 17.5V5l10-2.2v12" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="3" fill="currentColor"/><circle cx="16.5" cy="15" r="3" fill="currentColor"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10-6.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
-  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.5" height="14" rx="1.5" fill="currentColor"/><rect x="13.5" y="5" width="4.5" height="14" rx="1.5" fill="currentColor"/></symbol>
-  <symbol id="i-replay" viewBox="0 0 24 24"><path d="M5 12a7 7 0 1 0 2-4.9" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M4.5 3.5v4.5H9" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s-6.5 7-6.5 11.5a6.5 6.5 0 0 0 13 0C18.5 10 12 3 12 3z" fill="currentColor"/></symbol>
-  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 9c3-3 6-3 9 0s6 3 9 0M3 15c3-3 6-3 9 0s6 3 9 0" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></symbol>
-  <symbol id="i-seed" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5" stroke="currentColor" stroke-width="2.2" fill="none" stroke-dasharray="1.5 3" stroke-linecap="round"/><circle cx="12" cy="9" r="1.8" fill="currentColor"/><path d="M12 11v9.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
-  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></symbol>
-  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 9.5c0 6-8 11-8 11z" fill="currentColor"/></symbol>
-  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3" fill="currentColor"/><path d="M16 10.5l5-2.5v8l-5-2.5z" fill="currentColor"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6.2 12 3 3 0 0 0 7 18z" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linejoin="round"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
-  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" fill="currentColor"/></symbol>
-  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 8-11h-6z" fill="currentColor"/></symbol>
+  <!-- Icon set: Phosphor Icons v2.1.1 (MIT, phosphoricons.com). Fill style for solid shapes, Bold for line glyphs,
+       mirroring the SF Symbols style of the PebblePath iOS app. The ripple stone above stays custom. -->
+  <symbol id="i-mic" viewBox="0 0 256 256"><!-- Phosphor microphone (fill) --><title>microphone</title><path fill="currentColor" d="M80,128V64a48,48,0,0,1,96,0v64a48,48,0,0,1-96,0Zm128,0a8,8,0,0,0-16,0,64,64,0,0,1-128,0,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V240a8,8,0,0,0,16,0V207.6A80.11,80.11,0,0,0,208,128Z"/></symbol>
+  <symbol id="i-note" viewBox="0 0 256 256"><!-- Phosphor music-note (fill) --><title>music-note</title><path fill="currentColor" d="M210.3,56.34l-80-24A8,8,0,0,0,120,40V148.26A48,48,0,1,0,136,184V98.75l69.7,20.91A8,8,0,0,0,216,112V64A8,8,0,0,0,210.3,56.34Z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 256 256"><!-- Phosphor play (fill) --><title>play</title><path fill="currentColor" d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 256 256"><!-- Phosphor pause (fill) --><title>pause</title><path fill="currentColor" d="M216,48V208a16,16,0,0,1-16,16H160a16,16,0,0,1-16-16V48a16,16,0,0,1,16-16h40A16,16,0,0,1,216,48ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Z"/></symbol>
+  <symbol id="i-replay" viewBox="0 0 256 256"><!-- Phosphor arrow-counter-clockwise (bold) --><title>arrow-counter-clockwise</title><path fill="currentColor" d="M228,128a100,100,0,0,1-98.66,100H128a99.39,99.39,0,0,1-68.62-27.29,12,12,0,0,1,16.48-17.45,76,76,0,1,0-1.57-109c-.13.13-.25.25-.39.37L54.89,92H72a12,12,0,0,1,0,24H24a12,12,0,0,1-12-12V56a12,12,0,0,1,24,0V76.72L57.48,57.06A100,100,0,0,1,228,128Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 256 256"><!-- Phosphor drop (fill) --><title>drop</title><path fill="currentColor" d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Zm9.85,105.59a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 256 256"><!-- Phosphor waves (bold) --><title>waves</title><path fill="currentColor" d="M225.24,174.74a12,12,0,0,1-1.58,16.89C205.49,206.71,189.06,212,174.15,212c-19.76,0-36.86-9.29-51.88-17.44-25.06-13.62-44.86-24.37-74.61.3a12,12,0,1,1-15.32-18.48c42.25-35,75-17.23,101.39-2.92,25.06,13.61,44.86,24.37,74.61-.3A12,12,0,0,1,225.24,174.74Zm-16.9-57.59c-29.75,24.67-49.55,13.91-74.61.3-26.35-14.3-59.14-32.11-101.39,2.92a12,12,0,0,0,15.32,18.48c29.75-24.67,49.55-13.92,74.61-.3,15,8.15,32.12,17.44,51.88,17.44,14.91,0,31.34-5.29,49.51-20.36a12,12,0,0,0-15.32-18.48ZM47.66,82.84c29.75-24.67,49.55-13.92,74.61-.3,15,8.15,32.12,17.44,51.88,17.44,14.91,0,31.34-5.29,49.51-20.36a12,12,0,0,0-15.32-18.48c-29.75,24.67-49.55,13.92-74.61.3-26.35-14.3-59.14-32.11-101.39,2.93A12,12,0,1,0,47.66,82.84Z"/></symbol>
+  <symbol id="i-seed" viewBox="0 0 256 256"><!-- Phosphor flower (fill) --><title>flower</title><path fill="currentColor" d="M210.35,129.36c-.81-.47-1.7-.92-2.62-1.36.92-.44,1.81-.89,2.62-1.36a40,40,0,1,0-40-69.28c-.81.47-1.65,1-2.48,1.59.08-1,.13-2,.13-3a40,40,0,0,0-80,0c0,.94,0,1.94.13,3-.83-.57-1.67-1.12-2.48-1.59a40,40,0,1,0-40,69.28c.81.47,1.7.92,2.62,1.36-.92.44-1.81.89-2.62,1.36a40,40,0,1,0,40,69.28c.81-.47,1.65-1,2.48-1.59-.08,1-.13,2-.13,2.95a40,40,0,0,0,80,0c0-.94-.05-1.94-.13-2.95.83.57,1.67,1.12,2.48,1.59A39.79,39.79,0,0,0,190.29,204a40.43,40.43,0,0,0,10.42-1.38,40,40,0,0,0,9.64-73.28ZM128,156a28,28,0,1,1,28-28A28,28,0,0,1,128,156Z"/></symbol>
+  <symbol id="i-snow" viewBox="0 0 256 256"><!-- Phosphor snowflake (bold) --><title>snowflake</title><path fill="currentColor" d="M227.65,149.14a12,12,0,0,1-8.79,14.51l-20.67,5.08,5.4,20.16a12,12,0,0,1-23.18,6.22l-7.29-27.2L140,148.78V187l20.48,20.48a12,12,0,0,1-17,17L128,209l-15.51,15.52a12,12,0,0,1-17-17L116,187V148.78L82.88,167.91l-7.29,27.2a12,12,0,0,1-23.18-6.22l5.4-20.16-20.67-5.08a12,12,0,1,1,5.72-23.3l27.89,6.85L104,128,70.75,108.8l-27.89,6.85A11.8,11.8,0,0,1,40,116a12,12,0,0,1-2.85-23.65l20.67-5.08-5.4-20.16a12,12,0,0,1,23.18-6.22l7.29,27.2L116,107.21V69L95.52,48.48a12,12,0,0,1,17-17L128,47l15.51-15.52a12,12,0,1,1,17,17L140,69v38.24l33.12-19.12,7.29-27.2a12,12,0,0,1,23.18,6.22l-5.4,20.16,20.67,5.08A12,12,0,0,1,216,116a11.8,11.8,0,0,1-2.87-.35l-27.89-6.85L152,128l33.25,19.2,27.89-6.85A12,12,0,0,1,227.65,149.14Z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 256 256"><!-- Phosphor heart (fill) --><title>heart</title><path fill="currentColor" d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></symbol>
+  <symbol id="i-video" viewBox="0 0 256 256"><!-- Phosphor film-strip (fill) --><title>film-strip</title><path fill="currentColor" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM184,56h32V72H184ZM72,200H40V184H72ZM72,72H40V56H72Zm48,128H88V184h32Zm0-128H88V56h32Zm48,128H136V184h32Zm0-128H136V56h32Zm48,128H184V184h32v16Z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 256 256"><!-- Phosphor check (bold) --><title>check</title><path fill="currentColor" d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 256 256"><!-- Phosphor cloud-slash (fill) --><title>cloud-slash</title><path fill="currentColor" d="M248,128.72A87.74,87.74,0,0,1,222.41,190a4,4,0,0,1-5.77-.16L103.78,65.67a4,4,0,0,1,.39-5.76A87.82,87.82,0,0,1,160.87,40C209.15,40.47,248.38,80.43,248,128.72ZM53.92,34.62A8,8,0,1,0,42.08,45.38L81.33,88.56l-.06.11A64,64,0,0,0,8,153c.53,35.12,29.84,63,65,63h87a87.65,87.65,0,0,0,31.78-5.95l10.3,11.33a8,8,0,0,0,11.33.52,8.32,8.32,0,0,0,.29-11.52Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 256 256"><!-- Phosphor house (fill) --><title>house</title><path fill="currentColor" d="M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 256 256"><!-- Phosphor arrow-down (bold) --><title>arrow-down</title><path fill="currentColor" d="M208.49,152.49l-72,72a12,12,0,0,1-17,0l-72-72a12,12,0,0,1,17-17L116,187V40a12,12,0,0,1,24,0V187l51.51-51.52a12,12,0,0,1,17,17Z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 256 256"><!-- Phosphor lightning (fill) --><title>lightning</title><path fill="currentColor" d="M213.85,125.46l-112,120a8,8,0,0,1-13.69-7l14.66-73.33L45.19,143.49a8,8,0,0,1-3-13l112-120a8,8,0,0,1,13.69,7L153.18,90.9l57.63,21.61a8,8,0,0,1,3,12.95Z"/></symbol>
 </svg>
 
 <nav class="nav">
@@ -273,7 +287,7 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="clock">14:07</span><span class="batt"></span>
+            <span class="clock">14:07</span>
             <div class="center">
               <svg class="stone"><use href="#ripple-stone"/></svg>
             </div>
@@ -287,7 +301,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="batt"></span>
             <div class="center">
               <div class="ring"><div class="big teal"><svg><use href="#i-mic"/></svg></div></div>
               <div class="dots"><i></i><i></i><i></i></div>
@@ -301,7 +314,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
-            <span class="batt"></span>
             <div class="center" style="gap:14px">
               <div class="word fr">papillon</div>
               <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
@@ -317,7 +329,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
-            <span class="batt"></span>
             <div class="center" style="gap:14px">
               <div class="word sm" style="color:rgba(255,255,255,0.8)">I'm hungry</div>
               <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
@@ -333,7 +344,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
-            <span class="batt"></span>
             <div class="tiles">
               <div class="tile c1 on"><svg><use href="#i-note"/></svg></div>
               <div class="tile c2"><svg><use href="#i-note"/></svg></div>
@@ -349,7 +359,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="batt"></span>
             <div class="np">
               <div class="art c1"><svg><use href="#i-note"/></svg></div>
               <div class="bar"></div>
@@ -364,7 +373,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
-            <span class="batt"></span>
             <div class="tiles">
               <div class="tile rain-t"><svg><use href="#i-drop"/></svg></div>
               <div class="tile seed-t"><svg><use href="#i-seed"/></svg></div>
@@ -380,16 +388,20 @@
       <!-- 8 RAIN -->
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
-          <div class="face rain-face" id="rain"></div>
+          <div class="face rain-face" id="rain">
+            <span class="cloud k1"></span><span class="cloud k2"></span>
+            <svg class="hills" viewBox="0 0 205 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 58 C 34 30, 70 34, 104 52 S 172 40, 205 30 V 90 H 0 Z" fill="#17343C" opacity="0.85"/><path d="M0 74 C 44 56, 86 60, 124 70 S 184 62, 205 56 V 90 H 0 Z" fill="#0F2A31"/></svg>
+            <div class="water"></div>
+            <div class="layer" id="rainFar"></div><div class="layer" id="rainNear"></div>
+          </div>
         </div>
-        <div class="cap"><b>Calm: rain</b><span>Full-face loop with a soft sound bed and nothing on top of it. Brightness eases down after 30 seconds. The bottom button (PWR) goes home.</span></div>
+        <div class="cap"><b>Calm: rain</b><span>A soft dusk scene with hills and water, two layers of rain, splashes and drips on the glass, and a soft sound bed. Nothing on top of it. Brightness eases down after 30 seconds. The bottom button (PWR) goes home.</span></div>
       </div>
 
       <!-- 9 HELLO HOLD -->
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot cue"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="batt"></span>
             <div class="center" style="gap:16px">
               <div class="hold" id="hold">
                 <svg class="prog" viewBox="0 0 132 132"><circle cx="66" cy="66" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/><circle id="holdArc" cx="66" cy="66" r="60" fill="none" stroke="#E39B7C" stroke-width="6" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="245"/></svg>
@@ -406,7 +418,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="batt"></span>
             <div class="center" style="gap:18px">
               <div class="big xl teal"><svg><use href="#i-heart"/></svg><span class="check"><svg><use href="#i-check"/></svg></span></div>
               <div class="faces"><span class="avatar lg a1"></span><span class="avatar lg a2"></span></div>
@@ -420,7 +431,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
-            <span class="batt low"></span>
             <span class="zz z1">z</span><span class="zz z2">z</span><span class="zz z3">z</span>
             <div class="center">
               <svg class="stone" style="opacity:.6;filter:none"><use href="#ripple-stone"/></svg>
@@ -435,7 +445,6 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="batt"></span>
             <div class="center" style="gap:18px">
               <div class="big sand"><svg><use href="#i-cloud-off"/></svg></div>
               <div class="hint-row" style="position:static;gap:22px"><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-note"/></svg><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-drop"/></svg></div>
@@ -460,7 +469,6 @@
         <div class="fig">
           <div class="watch flipped"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
             <div class="face mesh-dark">
-              <span class="batt"></span>
               <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
               <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
             </div>
@@ -474,7 +482,6 @@
         <div class="fig">
           <div class="watch"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
             <div class="face mesh-dark">
-              <span class="batt"></span>
               <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
               <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
             </div>
@@ -501,8 +508,8 @@
 <section style="background:var(--sand-light)">
   <div class="wrap">
     <div class="eyebrow">Icon set</div>
-    <h2 style="margin-bottom:8px">Seventeen shapes, one weight</h2>
-    <p class="muted" style="margin-bottom:22px;max-width:70ch">Every icon is a single filled or 2.4-stroke silhouette on a 24 grid with round caps, no inner detail, so it still reads at 88 px on the panel and at 44 px as a hint (44 and 22 px in these half-size mockups). The ripple stone is the only "character". Nothing has a face.</p>
+    <h2 style="margin-bottom:8px">Seventeen icons, one family</h2>
+    <p class="muted" style="margin-bottom:22px;max-width:70ch">Standard shapes from Phosphor Icons (MIT licence), matched to the SF Symbols style of the PebblePath iOS app: solid shapes use the Fill style, line glyphs (replay, waves, snowflake, tick, arrow) use Bold. They read at 88 px on the panel and 44 px as a hint (44 and 22 px in these half-size mockups). The same set converts to an LVGL font for the firmware. The ripple stone stays PebblePath's own mark and is the only "character".</p>
     <div class="iconsheet">
       <div class="ico"><span class="box"><svg><use href="#ripple-stone"/></svg></span><b>Pebble</b>home, talk</div>
       <div class="ico"><span class="box"><svg><use href="#i-mic"/></svg></span><b>Mic</b>listening</div>
@@ -513,7 +520,7 @@
       <div class="ico"><span class="box"><svg><use href="#i-pause"/></svg></span><b>Pause</b></div>
       <div class="ico"><span class="box"><svg><use href="#i-drop"/></svg></span><b>Drop</b>calm, rain</div>
       <div class="ico"><span class="box"><svg><use href="#i-wave"/></svg></span><b>Wave</b>tide</div>
-      <div class="ico"><span class="box"><svg><use href="#i-seed"/></svg></span><b>Seed</b>dandelion</div>
+      <div class="ico"><span class="box"><svg><use href="#i-seed"/></svg></span><b>Flower</b>seeds loop</div>
       <div class="ico"><span class="box"><svg><use href="#i-snow"/></svg></span><b>Snow</b></div>
       <div class="ico"><span class="box"><svg><use href="#i-home"/></svg></span><b>Home</b>family photo</div>
       <div class="ico"><span class="box" style="background:var(--terracotta)"><svg><use href="#i-heart"/></svg></span><b>Heart</b>hello</div>
@@ -574,20 +581,34 @@
 <script>
   (function () {
     var host = document.getElementById('rain');
-    for (var i = 0; i < 26; i++) {
-      var d = document.createElement('i'); d.className = 'drop';
-      d.style.left = (Math.random() * 100) + '%';
-      d.style.animationDuration = (0.9 + Math.random() * 1.2) + 's';
-      d.style.animationDelay = (-Math.random() * 2) + 's';
-      d.style.opacity = 0.35 + Math.random() * 0.6;
-      host.appendChild(d);
+    var far = document.getElementById('rainFar'), near = document.getElementById('rainNear');
+    function drops(layer, cls, n, dur, jitter, alpha) {
+      for (var i = 0; i < n; i++) {
+        var d = document.createElement('i'); d.className = 'drop ' + cls;
+        d.style.left = (Math.random() * 100) + '%';
+        d.style.animationDuration = (dur + Math.random() * jitter) + 's';
+        d.style.animationDelay = (-Math.random() * 3) + 's';
+        d.style.opacity = alpha + Math.random() * 0.35;
+        layer.appendChild(d);
+      }
     }
-    for (var j = 0; j < 5; j++) {
+    drops(far, 'far', 40, 1.3, 0.8, 0.3);
+    drops(near, 'near', 20, 0.65, 0.35, 0.55);
+    for (var j = 0; j < 9; j++) {
       var r = document.createElement('i'); r.className = 'ripple';
-      r.style.left = (10 + Math.random() * 70) + '%';
-      r.style.bottom = (20 + Math.random() * 40) + 'px';
-      r.style.animationDelay = (-Math.random() * 2.4) + 's';
+      r.style.left = (8 + Math.random() * 84) + '%';
+      r.style.bottom = (6 + Math.random() * 36) + 'px';
+      r.style.animationDelay = (-Math.random() * 2.2) + 's';
+      r.style.animationDuration = (1.8 + Math.random() * 0.9) + 's';
       host.appendChild(r);
+    }
+    for (var k = 0; k < 4; k++) {
+      var t = document.createElement('i'); t.className = 'streak';
+      t.style.left = (14 + Math.random() * 72) + '%';
+      t.style.top = (18 + Math.random() * 90) + 'px';
+      t.style.animationDuration = (5 + Math.random() * 4) + 's';
+      t.style.animationDelay = (-Math.random() * 8) + 's';
+      host.appendChild(t);
     }
   })();
 

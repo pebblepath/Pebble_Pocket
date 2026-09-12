@@ -3,3 +3,8 @@ node_modules/
 build/
 sdkconfig.old
 *.local
+
+# Originals with location metadata stay local; only stripped crops are committed
+*.heic
+*.HEIC
+.DS_Store
