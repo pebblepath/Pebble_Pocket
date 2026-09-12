@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Pebble Pocket — Screens</title>
+<title>Pebble Pocket · Screens</title>
 <meta name="description" content="Face mockups for Pebble Pocket on the 2.06 inch 410 × 502 AMOLED, designed for children from three: icons first, almost no text.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,31 +16,58 @@
   @media (max-width: 860px) { .intro .grid { grid-template-columns: 1fr; } }
 
   /* ---------- Watch frame ---------- */
-  /* Physical: 50.8 × 42 mm case, 410 × 502 px face. Rendered at 0.5×: 205 × 251 px. */
-  .shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 28px 20px; }
-  .slot { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-  .slot .cap { text-align: center; max-width: 250px; }
+  /* Drawn from Waveshare's outline drawing, straps removed.
+     Case 42.00 × 50.80 mm (13.60 mm deep). Visible AMOLED 33.09 × 40.51 mm = 410 × 502 px
+     (12.39 px/mm, about 315 ppi), corner R9.2. Right edge, top to bottom: mic, BOOT, USB-C, PWR, mic. Speaker slots and TF card on the left edge.
+     Rendered at 0.5×, so 1 mm = 6.195 px and the face is 205 × 251 px. */
+  .shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 32px 20px; }
+  .slot { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .slot .cap { text-align: center; max-width: 260px; }
   .slot .cap b { display: block; font-family: var(--font-display); font-weight: 800; font-size: 15px; }
   .slot .cap span { font-size: 13px; color: var(--warm-gray); line-height: 1.45; }
 
   .watch {
-    position: relative; width: 236px; height: 288px; border-radius: 40px;
-    background: linear-gradient(160deg, #2B2F31, #131617);
-    box-shadow: 0 22px 44px rgba(44,62,64,0.22), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.5);
+    --mm: 6.195px;
+    --case-r: calc(13 * var(--mm));
+    --glass-inset: calc(2.2 * var(--mm));
+    position: relative; width: calc(42 * var(--mm)); height: calc(50.8 * var(--mm));
+    border-radius: var(--case-r);
+    background: linear-gradient(155deg, #34383A 0%, #1D2021 42%, #101213 100%);
+    box-shadow:
+      0 24px 46px rgba(44,62,64,0.24), 0 6px 14px rgba(44,62,64,0.14),
+      inset 0 1.5px 0 rgba(255,255,255,0.14), inset 1px 0 0 rgba(255,255,255,0.05),
+      inset 0 -2px 1px rgba(0,0,0,0.55);
     display: grid; place-items: center; cursor: zoom-in;
   }
-  .watch::before, .watch::after {
-    content: ''; position: absolute; left: 50%; transform: translateX(-50%);
-    width: 96px; height: 14px; background: #1A1D1E; border-radius: 6px;
+  /* Black cover glass, a little larger than the lit area */
+  .watch::before {
+    content: ''; position: absolute; inset: var(--glass-inset);
+    border-radius: calc(var(--case-r) - var(--glass-inset));
+    background: linear-gradient(162deg, #101414 0%, #030404 38%, #020303 100%);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.05);
   }
-  .watch::before { top: -9px; } .watch::after { bottom: -9px; }
-  .watch .btn-side { position: absolute; right: -6px; top: 92px; width: 6px; height: 34px; background: #3A3F41; border-radius: 0 4px 4px 0; }
-  .watch .btn-side.b2 { top: 140px; height: 22px; }
+  /* Soft reflection across the glass, above the face */
+  .watch::after {
+    content: ''; position: absolute; inset: var(--glass-inset); z-index: 2; pointer-events: none;
+    border-radius: calc(var(--case-r) - var(--glass-inset));
+    background: linear-gradient(158deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 30%);
+  }
+
+  /* Right-edge hardware (positions read off the side view) */
+  .watch .hw { position: absolute; right: calc(-0.8 * var(--mm)); width: calc(1.1 * var(--mm)); border-radius: 0 3px 3px 0;
+    background: linear-gradient(90deg, #1A1D1E, #3A3F41 70%, #2A2E30); box-shadow: inset 0 1px 0 rgba(255,255,255,0.10); }
+  /* BOOT carries a terracotta sticker so a child can find the Hello button */
+  .watch .hw.boot { top: calc(29% - 2 * var(--mm)); height: calc(4 * var(--mm)); background: linear-gradient(90deg, #A8624A, #C67B5C 70%, #B26A4E); }
+  .watch .hw.usb  { top: 38.5%; height: calc(11.5 * var(--mm)); right: calc(-0.6 * var(--mm)); width: calc(0.9 * var(--mm)); background: linear-gradient(90deg, #17191A, #2C3032); }
+  .watch .hw.pwr  { top: calc(71% - 2 * var(--mm)); height: calc(4 * var(--mm)); }
+  .watch .hw.mic  { right: calc(0.7 * var(--mm)); width: 3px; height: 3px; border-radius: 50%; background: #070808; box-shadow: 0 0.5px 0 rgba(255,255,255,0.12); }
+  .watch .hw.mic.m1 { top: 18%; } .watch .hw.mic.m2 { top: 83%; }
+  /* Glow on the button a face is asking for (Hello holds BOOT) */
+  .watch .hw.cue { background: linear-gradient(90deg, #A8624A, #E39B7C); box-shadow: 0 0 10px rgba(198,123,92,0.75); }
 
   .face {
-    position: relative; width: 205px; height: 251px; border-radius: 26px; overflow: hidden;
+    position: relative; z-index: 1; width: 205px; height: 251px; border-radius: calc(9.2 * var(--mm)); overflow: hidden;
     background: #06100F; color: #fff; font-family: var(--font-display);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
   }
   .face.mesh-dark {
     background:
@@ -50,10 +77,11 @@
       linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
   }
   /* Only the battery survives from the old status bar; parents read the rest in the app */
-  .face .batt { position: absolute; top: 12px; right: 14px; width: 18px; height: 9px; border: 1.5px solid rgba(255,255,255,0.55); border-radius: 3px; }
+  /* Corner status sits inside the R9.2 curve (at 0.5×, x ≥ 20 px at the top edge would still clip) */
+  .face .batt { position: absolute; top: 17px; right: 30px; width: 18px; height: 9px; border: 1.5px solid rgba(255,255,255,0.55); border-radius: 3px; }
   .face .batt::after { content: ''; position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 62%; background: var(--teal-glow); border-radius: 1px; }
   .face .batt.low::after { width: 18%; background: var(--terracotta); }
-  .face .clock { position: absolute; top: 10px; left: 14px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-body); }
+  .face .clock { position: absolute; top: 14px; left: 30px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-body); }
 
   .face .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 16px; gap: 10px; }
   .face .word { font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
@@ -102,7 +130,6 @@
   .seed-t { background: linear-gradient(180deg, #D4A843, #A8624A); }
   .snow-t { background: linear-gradient(180deg, #8B7BB5, #4A3F72); }
   .tile.wide { grid-column: span 2; }
-  .tile .photo { width: 100%; height: 100%; display: grid; place-items: center; font-weight: 800; font-size: 28px; color: rgba(255,255,255,0.9); }
 
   /* Now playing */
   .np { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
@@ -123,8 +150,10 @@
   .hold svg.prog { position: absolute; inset: 0; transform: rotate(-90deg); }
   .faces { display: flex; gap: 10px; justify-content: center; }
   .avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.7); }
-  .avatar.a1 { background: linear-gradient(140deg, #C98A8A, #8B7BB5); }
-  .avatar.a2 { background: linear-gradient(140deg, #6B9AC4, #3D9B8F); }
+  /* Contact photos (Mamie, Papi). Drop mamie.jpg and papi.jpg into assets/contacts/; until then the colour circle shows.
+     Later these become the contacts' PebblePath profile photos. */
+  .avatar.a1 { background: url("assets/contacts/mamie.jpg") center / cover no-repeat, linear-gradient(140deg, #C98A8A, #8B7BB5); }
+  .avatar.a2 { background: url("assets/contacts/papi.jpg") center / cover no-repeat, linear-gradient(140deg, #6B9AC4, #3D9B8F); }
   .avatar.lg { width: 56px; height: 56px; font-size: 20px; }
   .check { position: absolute; right: -4px; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: var(--teal-glow); display: grid; place-items: center; }
   .big .check { position: absolute; right: 2px; bottom: 2px; width: 30px; height: 30px; border: 3px solid #0B1F1D; }
@@ -134,6 +163,25 @@
   .zz { position: absolute; font-weight: 800; color: rgba(255,255,255,0.55); animation: floatz 2.6s ease-in-out infinite; }
   .zz.z1 { font-size: 14px; right: 62px; top: 74px; } .zz.z2 { font-size: 18px; right: 48px; top: 56px; animation-delay: .6s; } .zz.z3 { font-size: 22px; right: 30px; top: 34px; animation-delay: 1.2s; }
   @keyframes floatz { 0%,100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(-6px); opacity: .9; } }
+
+  /* ---------- How it's held (motion sensor) ---------- */
+  .held { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 32px 20px; }
+  .held .fig { position: relative; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .held .watch { cursor: default; }
+  /* Lifted on the lanyard: the case is upside down, the face turns itself over */
+  .held .watch.flipped { transform: rotate(180deg); }
+  .held .watch.flipped .face { transform: rotate(180deg); }
+  .held .cord { width: 4px; height: 58px; margin-top: -2px; border-radius: 2px; background: linear-gradient(180deg, #3A3F41, var(--teal-deep)); }
+  .held .surface { width: 250px; height: 10px; margin-top: 18px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(44,62,64,0.22), transparent 70%); }
+  /* Face-down: the back of the case, straps removed. Buttons read on the left from behind. */
+  .watch.back { background: linear-gradient(155deg, #2A2D2F 0%, #1A1C1D 50%, #0E1011 100%); }
+  .watch.back::before, .watch.back::after { content: none; }
+  .watch.back .hw { right: auto; left: calc(-0.8 * var(--mm)); border-radius: 3px 0 0 3px; background: linear-gradient(270deg, #1A1D1E, #3A3F41 70%, #2A2E30); }
+  .watch.back .hw.boot { background: linear-gradient(270deg, #A8624A, #C67B5C 70%, #B26A4E); }
+  .watch.back .slotbar { position: absolute; left: 50%; transform: translateX(-50%); width: calc(22 * var(--mm)); height: calc(1.4 * var(--mm)); border-radius: 3px; background: #131516; box-shadow: inset 0 1px 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04); }
+  .watch.back .slotbar.top { top: calc(2.2 * var(--mm)); } .watch.back .slotbar.bottom { bottom: calc(2.2 * var(--mm)); }
+  .watch.back .zz { z-index: 3; color: var(--teal-dark); }
+  .watch.back .zz.z1 { right: -8px; top: -14px; } .watch.back .zz.z2 { right: -24px; top: -34px; } .watch.back .zz.z3 { right: -44px; top: -58px; }
 
   /* ---------- Modal zoom ---------- */
   .modal { position: fixed; inset: 0; background: rgba(20,30,31,0.72); backdrop-filter: blur(6px); display: none; place-items: center; z-index: 50; padding: 24px; }
@@ -180,10 +228,10 @@
   <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8-5-8-11a4.5 4.5 0 0 1 8-2.6A4.5 4.5 0 0 1 20 9.5c0 6-8 11-8 11z" fill="currentColor"/></symbol>
   <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3" fill="currentColor"/><path d="M16 10.5l5-2.5v8l-5-2.5z" fill="currentColor"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6.2 12 3 3 0 0 0 7 18z" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linejoin="round"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></symbol>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 8-11h-6z" fill="currentColor"/></symbol>
 </svg>
 
@@ -206,12 +254,12 @@
     <div>
       <div class="eyebrow">Face mockups · 410 × 502 · shown at half size · designed for ages 3+</div>
       <h1>What the child sees.</h1>
-      <p class="lede" style="margin-top:16px">Twelve states, no reading required. One big shape per face, icons before words, and the only words that appear are the ones Pebble is teaching. Click any face to see it at wrist size.</p>
+      <p class="lede" style="margin-top:16px">Twelve states, no reading required. One big shape per face, icons before words, and the only words that appear are the ones Pebble is teaching. Click any face to zoom in.</p>
     </div>
     <div class="specs">
       <div class="card"><b>1 shape</b><span>per face, centred</span></div>
-      <div class="card"><b>≥ 96 px</b><span>tap targets (1× scale: ≥ 9 mm)</span></div>
-      <div class="card"><b>0 menus</b><span>swipe sideways, press to go home</span></div>
+      <div class="card"><b>≥ 96 px</b><span>tap targets (7.7 mm on this panel; 9 mm needs 112 px)</span></div>
+      <div class="card"><b>0 menus</b><span>swipe sideways, bottom button for home</span></div>
       <div class="card"><b>2 words</b><span>at most, and only when teaching</span></div>
     </div>
   </div>
@@ -223,7 +271,7 @@
 
       <!-- 1 HOME -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="clock">14:07</span><span class="batt"></span>
             <div class="center">
@@ -232,12 +280,12 @@
             <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
           </div>
         </div>
-        <div class="cap"><b>Home</b><span>Pebble, and nothing else. Tap the stone or press the button to talk. The three small icons hint at the swipe order: songs, calm, hello. The clock is for the grown-up.</span></div>
+        <div class="cap"><b>Home</b><span>Pebble, and nothing else. Tap the stone or press the top side button (BOOT) to talk. The three small icons hint at the swipe order: songs, calm, hello. The clock is for the grown-up.</span></div>
       </div>
 
       <!-- 2 LISTENING -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="batt"></span>
             <div class="center">
@@ -251,28 +299,28 @@
 
       <!-- 3 REPLY FR->EN -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <span class="batt"></span>
             <div class="center" style="gap:14px">
               <div class="word fr">papillon</div>
-              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
               <div class="word">butterfly</div>
               <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Pebble answers</b><span>The two words are the whole face. Amber is French, white is English, and Pebble says both aloud. The one button repeats it slowly. No chat bubbles, no sentences.</span></div>
+        <div class="cap"><b>Pebble answers</b><span>The two words are the whole face. Amber is French, white is English, and Pebble says both aloud. The one round button on the face repeats it slowly. No chat bubbles, no sentences.</span></div>
       </div>
 
       <!-- 4 REPLY EN->FR -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <span class="batt"></span>
             <div class="center" style="gap:14px">
               <div class="word sm" style="color:rgba(255,255,255,0.8)">I'm hungry</div>
-              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
               <div class="word fr">J'ai faim</div>
               <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
@@ -283,7 +331,7 @@
 
       <!-- 5 LEARN -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <span class="batt"></span>
             <div class="tiles">
@@ -294,12 +342,12 @@
             </div>
           </div>
         </div>
-        <div class="cap"><b>Songs</b><span>Four big colour tiles, a note or a film icon, no titles. A parent picks each tile's colour in the app, so "the yellow one" is Alouette at home and in class. Swipe up for the next four.</span></div>
+        <div class="cap"><b>Songs</b><span>Four big colour tiles, a note or a film icon, no titles. A parent picks the four songs and each tile's colour in the app, so "the yellow one" is Alouette at home and in class. Four at a time means nothing to scroll.</span></div>
       </div>
 
       <!-- 6 PLAYING -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="batt"></span>
             <div class="np">
@@ -309,12 +357,12 @@
             </div>
           </div>
         </div>
-        <div class="cap"><b>Playing</b><span>The tile they chose, grown large, a progress line and one pause button. Plays from the microSD card, so it works with no network at all.</span></div>
+        <div class="cap"><b>Playing</b><span>The tile they chose, grown large, a progress line and one pause button. A press on the top button (BOOT) pauses too. Plays from the microSD card, so it works with no network at all.</span></div>
       </div>
 
       <!-- 7 CALM -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <span class="batt"></span>
             <div class="tiles">
@@ -322,24 +370,24 @@
               <div class="tile seed-t"><svg><use href="#i-seed"/></svg></div>
               <div class="tile tide-t wide"><svg><use href="#i-wave"/></svg></div>
               <div class="tile snow-t"><svg><use href="#i-snow"/></svg></div>
-              <div class="tile c3"><div class="photo">👶</div></div>
+              <div class="tile c3"><svg><use href="#i-home"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Calm</b><span>Rain, seeds, tide, snow, and a family-photo tile parents can fill from the app. Icons only. This is the face a parent opens for them mid-tantrum, then hands over.</span></div>
+        <div class="cap"><b>Calm</b><span>Rain, seeds, tide, snow, and a family-photo tile (the home icon until a parent adds a photo in the app). Icons only. This is the face a parent opens for them mid-tantrum, then hands over.</span></div>
       </div>
 
       <!-- 8 RAIN -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face rain-face" id="rain"></div>
         </div>
-        <div class="cap"><b>Calm: rain</b><span>Full-face loop with a soft sound bed and nothing on top of it. Brightness eases down after 30 seconds. Any button press goes home.</span></div>
+        <div class="cap"><b>Calm: rain</b><span>Full-face loop with a soft sound bed and nothing on top of it. Brightness eases down after 30 seconds. The bottom button (PWR) goes home.</span></div>
       </div>
 
       <!-- 9 HELLO HOLD -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side" style="background:#C67B5C"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot cue"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="batt"></span>
             <div class="center" style="gap:16px">
@@ -347,30 +395,30 @@
                 <svg class="prog" viewBox="0 0 132 132"><circle cx="66" cy="66" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/><circle id="holdArc" cx="66" cy="66" r="60" fill="none" stroke="#E39B7C" stroke-width="6" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="245"/></svg>
                 <div class="big terra"><svg><use href="#i-heart"/></svg></div>
               </div>
-              <div class="faces"><span class="avatar a1">M</span><span class="avatar a2">P</span></div>
+              <div class="faces"><span class="avatar a1"></span><span class="avatar a2"></span></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Hello: hold to talk</b><span>Hold the terracotta button; the ring fills while they talk. The two faces are who will hear it, as photos from the app. Try it: press and hold the heart.</span></div>
+        <div class="cap"><b>Hello: hold to talk</b><span>Hold the top side button (BOOT, marked with a terracotta sticker); the ring fills while they talk. Does nothing while the Pocket is face-down. The two photos are who will hear it (Mamie and Papi), set by a parent. Later they become the contacts' PebblePath profile photos. On this page, press and hold the heart to watch the ring fill.</span></div>
       </div>
 
       <!-- 10 HELLO SENT -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="batt"></span>
             <div class="center" style="gap:18px">
               <div class="big xl teal"><svg><use href="#i-heart"/></svg><span class="check"><svg><use href="#i-check"/></svg></span></div>
-              <div class="faces"><span class="avatar lg a1">M</span><span class="avatar lg a2">P</span></div>
+              <div class="faces"><span class="avatar lg a1"></span><span class="avatar lg a2"></span></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Hello: sent</b><span>A green heart with a tick, and the faces it went to. Pebble says "sent to Mamie and Papi" out loud. Nothing to read, nothing to dismiss; it returns home by itself.</span></div>
+        <div class="cap"><b>Hello: sent</b><span>A teal heart with a tick, and the photos of who it went to. Pebble says "sent to Mamie and Papi" out loud. Nothing to read, nothing to dismiss; it returns home by itself.</span></div>
       </div>
 
       <!-- 11 RESTING -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <span class="batt low"></span>
             <span class="zz z1">z</span><span class="zz z2">z</span><span class="zz z3">z</span>
@@ -385,7 +433,7 @@
 
       <!-- 12 OFFLINE -->
       <div class="slot">
-        <div class="watch" data-zoom><span class="btn-side"></span><span class="btn-side b2"></span>
+        <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
             <span class="batt"></span>
             <div class="center" style="gap:18px">
@@ -401,11 +449,60 @@
   </div>
 </section>
 
+<section class="tight">
+  <div class="wrap">
+    <div class="eyebrow">How it's held</div>
+    <h2 style="margin-bottom:8px">The face knows which way is up</h2>
+    <p class="muted" style="margin-bottom:22px;max-width:70ch">The motion sensor only makes the Pocket easier to use. It never becomes something a child has to do: no shaking, no tilting to trigger anything. The buttons stay the way to act.</p>
+    <div class="held">
+
+      <div class="slot">
+        <div class="fig">
+          <div class="watch flipped"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
+            <div class="face mesh-dark">
+              <span class="batt"></span>
+              <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
+              <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
+            </div>
+          </div>
+          <div class="cord"></div>
+        </div>
+        <div class="cap"><b>Lifted on the lanyard</b><span>The cord runs through the top slot, so when a child lifts the Pocket to their eyes the case is upside down. The face turns itself over and reads the right way for them.</span></div>
+      </div>
+
+      <div class="slot">
+        <div class="fig">
+          <div class="watch"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
+            <div class="face mesh-dark">
+              <span class="batt"></span>
+              <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
+              <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
+            </div>
+          </div>
+          <div class="surface"></div>
+        </div>
+        <div class="cap"><b>On the table</b><span>Lying flat, the face keeps the way it was last facing, so nothing turns under a finger mid-tap. Raise it to wake it.</span></div>
+      </div>
+
+      <div class="slot">
+        <div class="fig">
+          <div class="watch back"><span class="zz z1">z</span><span class="zz z2">z</span><span class="zz z3">z</span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span>
+            <span class="slotbar top"></span><span class="slotbar bottom"></span>
+          </div>
+          <div class="surface"></div>
+        </div>
+        <div class="cap"><b>Face-down: asleep</b><span>Turned over, the screen and microphone are off, so nothing can be recorded. Holding the top button (BOOT) does nothing, so there are no pocket hellos. Pick it up to wake it.</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <section style="background:var(--sand-light)">
   <div class="wrap">
     <div class="eyebrow">Icon set</div>
-    <h2 style="margin-bottom:8px">Fourteen shapes, one weight</h2>
-    <p class="muted" style="margin-bottom:22px;max-width:70ch">Every icon is a single filled or 2.4-stroke silhouette on a 24 grid with round caps, no inner detail, so it still reads at 44 px on the wrist and at 22 px as a hint. The ripple stone is the only "character". Nothing has a face.</p>
+    <h2 style="margin-bottom:8px">Seventeen shapes, one weight</h2>
+    <p class="muted" style="margin-bottom:22px;max-width:70ch">Every icon is a single filled or 2.4-stroke silhouette on a 24 grid with round caps, no inner detail, so it still reads at 88 px on the panel and at 44 px as a hint (44 and 22 px in these half-size mockups). The ripple stone is the only "character". Nothing has a face.</p>
     <div class="iconsheet">
       <div class="ico"><span class="box"><svg><use href="#ripple-stone"/></svg></span><b>Pebble</b>home, talk</div>
       <div class="ico"><span class="box"><svg><use href="#i-mic"/></svg></span><b>Mic</b>listening</div>
@@ -418,9 +515,12 @@
       <div class="ico"><span class="box"><svg><use href="#i-wave"/></svg></span><b>Wave</b>tide</div>
       <div class="ico"><span class="box"><svg><use href="#i-seed"/></svg></span><b>Seed</b>dandelion</div>
       <div class="ico"><span class="box"><svg><use href="#i-snow"/></svg></span><b>Snow</b></div>
+      <div class="ico"><span class="box"><svg><use href="#i-home"/></svg></span><b>Home</b>family photo</div>
       <div class="ico"><span class="box" style="background:var(--terracotta)"><svg><use href="#i-heart"/></svg></span><b>Heart</b>hello</div>
       <div class="ico"><span class="box"><svg><use href="#i-cloud-off"/></svg></span><b>No cloud</b>offline</div>
       <div class="ico"><span class="box"><svg><use href="#i-bolt"/></svg></span><b>Bolt</b>charging</div>
+      <div class="ico"><span class="box"><svg><use href="#i-check"/></svg></span><b>Tick</b>hello sent</div>
+      <div class="ico"><span class="box"><svg><use href="#i-arrow-down"/></svg></span><b>Arrow</b>answer</div>
     </div>
   </div>
 </section>
@@ -436,11 +536,11 @@
       </div>
       <div class="card">
         <h3>Words only when teaching</h3>
-        <p>The only text on any child-facing face is the pair Pebble is teaching. Status, names, titles and errors are all spoken by Pebble or shown to the parent in the app.</p>
+        <p>The only text on any child-facing face is the pair Pebble is teaching. Status, names, titles and errors are all spoken by Pebble or shown to the parent in the app. The one exception is the small clock on Home, which is for the grown-up.</p>
       </div>
       <div class="card">
         <h3>Colour is the label</h3>
-        <p>Teal glow: Pebble is listening or talking. Amber: the French word. Terracotta: the one thing that leaves the device, a hello. Parents choose a colour per song, so tiles never need titles.</p>
+        <p>Teal glow: Pebble is listening or talking. Amber: the French word. Terracotta: a hello for family. Parents choose a colour per song, so tiles never need titles.</p>
         <div class="swatches">
           <span class="sw" style="background:#7DD4C8"></span><span class="sw" style="background:#3D9B8F"></span><span class="sw" style="background:#1F5C54"></span>
           <span class="sw" style="background:#D4A843"></span><span class="sw" style="background:#C67B5C"></span><span class="sw" style="background:#E8DCC8"></span>
@@ -448,11 +548,11 @@
       </div>
       <div class="card">
         <h3>Big targets, no precision</h3>
-        <p>Every tappable thing is at least 96 px at 1×, about 9 mm. Tiles fill the face in twos. Nothing sits in a corner. Damp thumbs and a bouncing lap still work.</p>
+        <p>Every tappable thing is at least 96 px at 1×, which is 7.7 mm on this panel (112 px if we want 9 mm). Tiles fill the face in twos. Nothing sits in a corner. Damp thumbs and a bouncing lap still work.</p>
       </div>
       <div class="card">
         <h3>Buttons are the safety net</h3>
-        <p>Press: talk. Hold: hello. Any press from anywhere: home. A child who gets lost in a swipe is one press from the stone.</p>
+        <p>Top button (BOOT): press to talk, hold for hello. While a song plays, a press pauses it. Bottom button (PWR): wake, and home from anywhere. Swipes go left and right only, so a child who gets lost is one press from the stone.</p>
       </div>
       <div class="card">
         <h3>Nothing to finish, nothing to win</h3>

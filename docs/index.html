@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Pebble Pocket — System Architecture</title>
+<title>Pebble Pocket · System Architecture</title>
 <meta name="description" content="How Pebble Pocket, PebblePath's small wearable companion, listens, translates, plays and sends hellos: device, hub and cloud.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,11 +124,11 @@
       <dl>
         <dt>Board</dt><dd>Waveshare ESP32-S3-Touch-AMOLED-2.06 (watch case, straps, battery included)</dd>
         <dt>Screen</dt><dd>2.06" AMOLED, 410 × 502, touch, 600 nits</dd>
-        <dt>Audio</dt><dd>ES8311 codec, ES7210 echo cancellation, dual mics, 1 W speaker</dd>
+        <dt>Audio</dt><dd>ES8311 codec, ES7210 mic ADC with a speaker loopback for software echo cancellation, dual mics, small speaker</dd>
         <dt>Radio</dt><dd>2.4 GHz Wi-Fi, Bluetooth LE 5 (no classic Bluetooth)</dd>
         <dt>Storage</dt><dd>32 MB flash, 8 MB PSRAM, microSD slot</dd>
         <dt>Power</dt><dd>400 mAh cell, USB-C, AXP2101 power management</dd>
-        <dt>Carry</dt><dd>22 mm flat-end strap slot, neck lanyard adapter, flat back for the table</dd>
+        <dt>Carry</dt><dd>22 mm flat-end strap slot, breakaway neck lanyard (spring-bar adapter, or cord through the slot if it does not seat), flat back for the table</dd>
       </dl>
     </aside>
   </div>
@@ -140,7 +140,7 @@
     <div class="grid grid-3">
       <div class="card has-bar"><span class="accent-bar teal"></span>
         <h3>The Pocket is a thin client</h3>
-        <p>It captures audio, shows a screen, plays sound and reads a button. Everything that needs a brain (speech, translation, Pebble's personality) lives in the cloud, so the device firmware barely changes when the classroom needs change.</p>
+        <p>It captures audio, shows a screen, plays sound and reads two buttons. Everything that needs a brain (speech, translation, Pebble's personality) lives in the cloud, so the device firmware barely changes when the classroom needs change.</p>
       </div>
       <div class="card has-bar"><span class="accent-bar amber"></span>
         <h3>The phone is the remote, not the brain</h3>
@@ -148,7 +148,7 @@
       </div>
       <div class="card has-bar"><span class="accent-bar terracotta"></span>
         <h3>Offline never feels broken</h3>
-        <p>Songs and calm clips are copied to the microSD card, so Learn and Calm work with no network at all. Only Translate and Hello need a connection, and the screen says so gently.</p>
+        <p>Songs and calm clips are copied to the microSD card, so Learn and Calm work with no network at all. Only Translate and Hello need a connection; the face shows a crossed-out cloud with songs and calm still lit, and Pebble says so gently.</p>
       </div>
     </div>
   </div>
@@ -182,7 +182,7 @@
           <text class="t-sub" x="96" y="110">ESP32-S3 · firmware (ESP-IDF)</text>
 
           <text class="t-item strong" x="54" y="152">Wake + capture</text>
-          <text class="t-item" x="54" y="170">"Hey Pebble" on-device (ESP-SR) or side button</text>
+          <text class="t-item" x="54" y="170">"Hey Pebble" on-device (ESP-SR) or BOOT press</text>
           <text class="t-item" x="54" y="186">Dual mics → echo cancelled → Opus stream</text>
 
           <text class="t-item strong" x="54" y="216">Show + play</text>
@@ -293,7 +293,7 @@
         <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
         <span class="pill amber">Translate</span>
         <h3 style="margin-top:12px">"Hey Pebble, comment on dit papillon ?"</h3>
-        <p>Wake word or a single press. The Pocket streams what it hears; the cloud detects the language, asks Claude as Pebble, and streams the answer back in Pebble's voice while the words appear on screen.</p>
+        <p>Wake word or a single press of the top side button. The Pocket streams what it hears; the cloud detects the language, asks Claude as Pebble, and streams the answer back in Pebble's voice while the words appear on screen.</p>
         <div class="flow">
           <span class="n">1</span><span class="s"><b>Listen.</b> Ring pulses teal; the mics are open for up to 8 seconds or until silence.</span>
           <span class="n">2</span><span class="s"><b>Think.</b> Speech-to-text (French or English, auto) → Claude with Pebble's prompt and the child's age.</span>
@@ -307,13 +307,13 @@
       <div class="card">
         <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
         <span class="pill purple">Learn</span>
-        <h3 style="margin-top:12px">Your songs and videos, on the wrist</h3>
-        <p>A parent drops audio or video into the PebblePath app. The cloud converts it to a Pocket-friendly format, and the Pocket copies it to microSD next time it charges. A scrollable selector on the face lists them; a tap plays.</p>
+        <h3 style="margin-top:12px">Your songs and videos, on the Pocket</h3>
+        <p>A parent drops audio or video into the PebblePath app. The cloud converts it to a Pocket-friendly format, and the Pocket copies it to microSD next time it charges. A parent picks four of them and a colour for each in the app; they appear as four colour tiles on the face, and a tap plays.</p>
         <div class="flow">
           <span class="n">1</span><span class="s"><b>Upload.</b> Any audio or video from the phone, browser or a shared link.</span>
-          <span class="n">2</span><span class="s"><b>Prepare.</b> Audio to 48 kHz Opus; video to 410 × 502 at 15 fps with the sound track split out.</span>
+          <span class="n">2</span><span class="s"><b>Prepare.</b> Audio to 24 kHz Opus, the one rate the shared audio clock allows; video to a small window, since the microSD slot is wired 1-bit.</span>
           <span class="n">3</span><span class="s"><b>Sync.</b> Manifest diff on charge; nothing is streamed live, so playback is instant and offline.</span>
-          <span class="n">4</span><span class="s"><b>Choose.</b> Selector shows a cover, a title, and a duration; long titles scroll.</span>
+          <span class="n">4</span><span class="s"><b>Choose.</b> Four big colour tiles, a note or a film icon, no titles; nothing to scroll.</span>
         </div>
       </div>
 
@@ -324,9 +324,9 @@
         <p>Raindrops on a window, a slow tide, drifting dandelion seeds. Short loops that ask nothing of a child, for when a moment has gone sideways or when everyone needs to stay still for a photo. Chosen by the parent, played by the child.</p>
         <div class="flow">
           <span class="n">1</span><span class="s"><b>Curate.</b> A starter set ships in firmware; parents add their own loops through the app.</span>
-          <span class="n">2</span><span class="s"><b>Open.</b> Swipe left from idle; large tiles, one per loop, no text needed.</span>
+          <span class="n">2</span><span class="s"><b>Open.</b> Swipe sideways from home, past the songs; large tiles, one per loop, no text needed.</span>
           <span class="n">3</span><span class="s"><b>Play.</b> Full-face loop with a soft sound bed; brightness eases down after 30 seconds.</span>
-          <span class="n">4</span><span class="s"><b>Leave.</b> Any button press returns to idle. No timers, no rewards.</span>
+          <span class="n">4</span><span class="s"><b>Leave.</b> The bottom button (PWR) returns home. No timers, no rewards.</span>
         </div>
       </div>
 
@@ -334,10 +334,10 @@
         <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
         <span class="pill terracotta">Hello</span>
         <h3 style="margin-top:12px">Press and hold to send a hello</h3>
-        <p>Hold the side button for a second and a half; a ring fills while the child talks. Let go and the clip goes to the approved contacts only. Grandparents get a notification from the PebblePath app and hear it there. No open messaging, no replies to the device in v0.1.</p>
+        <p>Hold the top side button for a second and a half; a ring fills while the child talks. Let go and the clip goes to the approved contacts only. Grandparents get a notification from the PebblePath app and hear it there. No open messaging, no replies to the device in v0.1.</p>
         <div class="flow">
-          <span class="n">1</span><span class="s"><b>Hold.</b> Haptic tick at 1.5 seconds, ring starts filling, 20-second cap.</span>
-          <span class="n">2</span><span class="s"><b>Release.</b> Clip is stored and the face shows "Sent to Mamie and Papi" with a small wave.</span>
+          <span class="n">1</span><span class="s"><b>Hold.</b> A soft click sound at 1.5 seconds (no haptics planned: the schematic shows a motor driver, but no motor is confirmed as fitted), ring starts filling, 20-second cap.</span>
+          <span class="n">2</span><span class="s"><b>Release.</b> Clip is stored; the face shows the sent heart and the two faces, and Pebble says "sent to Mamie and Papi" out loud.</span>
           <span class="n">3</span><span class="s"><b>Deliver.</b> Cloud pushes to approved contacts' PebblePath app; falls back to an SMS link that expires.</span>
           <span class="n">4</span><span class="s"><b>Trust.</b> Contacts are added and removed in the app by a parent, never on the device.</span>
         </div>
@@ -354,18 +354,18 @@
     <div class="grid grid-2">
       <div class="card constraint">
         <h3><span class="dot"></span>Build the audio path on ESP-IDF, not Arduino</h3>
-        <p>The ES8311 codec and the ES7210 echo canceller share an I2S clock. Full duplex works when the power rails come up first, then the I2S master clock, then both codecs as slaves. Arduino examples hide that order; ESP-IDF exposes it.</p>
+        <p>The ES8311 codec and the ES7210 mic ADC share all three I2S clock lines, so speaking and listening run at one sample rate. Full duplex works when the power rails are set first, then the I2S master clock, then both codecs. Arduino examples hide that order; ESP-IDF exposes it.</p>
       </div>
       <div class="card constraint">
         <h3><span class="dot"></span>Assume about an hour of screen-on time</h3>
-        <p>The 400 mAh cell gives roughly an hour at full brightness and three to four with the screen off. The face dims after 10 seconds, sleeps after 30, and wakes on button or wrist raise. Learn and Calm run with the screen at 40 percent.</p>
+        <p>The 400 mAh cell gives roughly an hour at full brightness and three to four with the screen off. The face dims after 10 seconds, sleeps after 30, and wakes when the bottom button (PWR) is pressed or the Pocket is raised. Learn and Calm run with the screen at 40 percent.</p>
       </div>
       <div class="card constraint">
         <h3><span class="dot"></span>No Bluetooth speaker mode</h3>
         <p>The ESP32-S3 has Bluetooth LE only, so the iPhone cannot treat the Pocket as a speaker. Media reaches the Pocket through the cloud sync instead, which is why the microSD card exists in this design.</p>
       </div>
       <div class="card constraint">
-        <h3><span class="dot"></span>One watt of speaker</h3>
+        <h3><span class="dot"></span>A small speaker</h3>
         <p>Loud enough for one child at arm's length, not for a room. Pebble speaks close and slow. A future tabletop dock could add a proper speaker over the reserved I2C and UART pads.</p>
       </div>
       <div class="card constraint">
@@ -394,12 +394,12 @@
     <div class="phase">
       <div class="when">Phase 1<small>2 weeks</small></div>
       <div><h3>Translate, button-first</h3>
-        <p>Cloud Function opens a WebSocket per device. Pocket streams Opus on press; cloud runs speech-to-text, calls Claude with the Pebble prompt, streams text-to-speech back. Screen shows both languages. This is the moment the device becomes Pebble.</p></div>
+        <p>A Cloud Run service opens a WebSocket per device (Cloud Functions cannot hold one). Pocket streams Opus on press; cloud runs speech-to-text, calls Claude with the Pebble prompt, streams text-to-speech back. Screen shows both languages. This is the moment the device becomes Pebble.</p></div>
     </div>
     <div class="phase">
       <div class="when">Phase 2<small>1 week</small></div>
       <div><h3>Learn and Calm from microSD</h3>
-        <p>Media upload in the Portal, transcode in a Function, manifest sync on charge, selector and gallery on the face. Ship a starter set of three calm loops inside the firmware so Calm works on day one.</p></div>
+        <p>Media upload in the Portal, transcode in a Function, manifest sync on charge, the four song tiles and the calm tiles on the face. Ship four calm loops (rain, seeds, tide, snow) inside the firmware so Calm works on day one; the family-photo tile shows the home icon until a parent adds a photo.</p></div>
     </div>
     <div class="phase">
       <div class="when">Phase 3<small>1 week</small></div>
