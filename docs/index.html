@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Pebble Pocket — System Architecture</title>
+<meta name="description" content="How Pebble Pocket, PebblePath's small wearable companion, listens, translates, plays and sends hellos: device, hub and cloud.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/pocket.css">
+<style>
+  /* Page-specific */
+  .hero { padding: 84px 0 72px; }
+  .hero .grid { grid-template-columns: 1.25fr 0.85fr; align-items: center; gap: 48px; }
+  @media (max-width: 860px) { .hero .grid { grid-template-columns: 1fr; } }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+
+  .device-card {
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 22px; padding: 22px 24px; color: #fff;
+  }
+  .device-card h3 { color: #fff; font-size: 17px; margin-bottom: 12px; }
+  .device-card dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font-size: 13.5px; }
+  .device-card dt { color: var(--teal-glow); font-weight: 600; }
+  .device-card dd { margin: 0; color: rgba(255,255,255,0.9); }
+
+  /* Architecture diagram */
+  .diagram-wrap { overflow-x: auto; padding-bottom: 6px; }
+  .diagram { width: 100%; min-width: 880px; height: auto; display: block; }
+  .diagram text { font-family: var(--font-body); fill: var(--charcoal); }
+  .diagram .t-title { font-family: var(--font-display); font-weight: 800; font-size: 17px; }
+  .diagram .t-sub { font-size: 11.5px; fill: var(--warm-gray); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+  .diagram .t-item { font-size: 11.5px; fill: #3E4E50; }
+  .diagram .t-item.strong { font-weight: 600; fill: var(--charcoal); }
+  .diagram .t-edge { font-size: 11.5px; fill: var(--teal-deep); font-weight: 600; }
+  .diagram .t-edge.warm { fill: var(--terracotta-dark); }
+  .diagram .box { fill: #fff; stroke: rgba(44,62,64,0.10); stroke-width: 1; filter: drop-shadow(0 2px 8px rgba(44,62,64,0.06)); }
+  .diagram .box.sand { fill: var(--sand-light); }
+  .diagram .box.teal { fill: var(--teal-deep); stroke: none; }
+  .diagram .box.teal text { fill: #fff; }
+  .diagram .chip { fill: rgba(61,155,143,0.12); }
+  .diagram .edge { stroke: var(--teal); stroke-width: 2; fill: none; }
+  .diagram .edge.dashed { stroke-dasharray: 5 5; }
+  .diagram .edge.warm { stroke: var(--terracotta); }
+  .diagram .edge.soft { stroke: rgba(44,62,64,0.28); }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; font-size: 13px; color: var(--warm-gray); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid var(--teal); }
+  .legend i.dashed { border-top-style: dashed; }
+  .legend i.warm { border-color: var(--terracotta); }
+  .legend i.soft { border-color: rgba(44,62,64,0.35); }
+
+  /* Flow cards */
+  .flow { display: grid; grid-template-columns: 44px 1fr; gap: 10px 14px; margin-top: 14px; }
+  .flow .n {
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 13px;
+    background: var(--sand-light); color: var(--teal-deep);
+  }
+  .flow .s { font-size: 14px; color: #3E4E50; padding-top: 5px; }
+  .flow .s b { color: var(--charcoal); font-weight: 600; }
+  .say {
+    margin-top: 14px; padding: 12px 14px; border-radius: 14px; font-size: 14px; line-height: 1.45;
+    background: var(--sand-light); border: 1px solid rgba(44,62,64,0.06);
+  }
+  .say .who { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--warm-gray); margin-bottom: 3px; }
+  .say + .say { margin-top: 8px; }
+  .say.pebble { background: rgba(61,155,143,0.10); border-color: rgba(61,155,143,0.18); }
+
+  /* Phases */
+  .phase { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 22px 0; border-top: 1px solid rgba(44,62,64,0.08); }
+  .phase:last-child { border-bottom: 1px solid rgba(44,62,64,0.08); }
+  .phase .when { font-family: var(--font-display); font-weight: 800; color: var(--teal-deep); font-size: 15px; }
+  .phase .when small { display: block; font-family: var(--font-body); font-weight: 500; color: var(--warm-gray); font-size: 12px; margin-top: 4px; }
+  .phase h3 { font-size: 17px; margin-bottom: 6px; }
+  .phase p { font-size: 14.5px; color: #3E4E50; margin-bottom: 4px; }
+  @media (max-width: 560px) { .phase { grid-template-columns: 1fr; gap: 6px; } }
+
+  .constraint h3 { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+  .constraint h3 .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--terracotta); flex: none; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ripple-stone" viewBox="0 0 24 24">
+    <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8" stroke="currentColor" stroke-width="1" stroke-opacity="0.2" fill="none"/>
+    <ellipse cx="12" cy="20.5" rx="6.5" ry="1.2" stroke="currentColor" stroke-width="1" stroke-opacity="0.35" fill="none"/>
+    <path fill="currentColor" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
+    <path fill="white" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
+  </symbol>
+</svg>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="mark"><svg><use href="#ripple-stone"/></svg></span>
+      <b>Pebble Pocket</b><span>by PebblePath</span>
+    </a>
+    <div class="nav-links">
+      <a class="active" href="index.html">Architecture</a>
+      <a href="screens.html">Screens</a>
+      <a href="#build">Build plan</a>
+    </div>
+  </div>
+</nav>
+
+<header class="mesh hero">
+  <div class="wrap grid">
+    <div>
+      <div class="eyebrow">System architecture · v0.1 · September 2026</div>
+      <h1>Pebble, small enough<br>to carry.</h1>
+      <p class="lede" style="margin-top:18px">A pocket-sized companion that listens for "Hey Pebble", answers in French or English in Pebble's own voice, plays the family's learning songs, calms a hard moment, and sends a hello to someone who loves them. The device stays simple; PebblePath's cloud does the thinking.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="screens.html">See the screens</a>
+        <a class="btn ghost" href="#diagram">How it fits together</a>
+      </div>
+    </div>
+    <aside class="device-card">
+      <h3>The hardware, as ordered</h3>
+      <dl>
+        <dt>Board</dt><dd>Waveshare ESP32-S3-Touch-AMOLED-2.06 (watch case, straps, battery included)</dd>
+        <dt>Screen</dt><dd>2.06" AMOLED, 410 × 502, touch, 600 nits</dd>
+        <dt>Audio</dt><dd>ES8311 codec, ES7210 echo cancellation, dual mics, 1 W speaker</dd>
+        <dt>Radio</dt><dd>2.4 GHz Wi-Fi, Bluetooth LE 5 (no classic Bluetooth)</dd>
+        <dt>Storage</dt><dd>32 MB flash, 8 MB PSRAM, microSD slot</dd>
+        <dt>Power</dt><dd>400 mAh cell, USB-C, AXP2101 power management</dd>
+        <dt>Carry</dt><dd>22 mm flat-end strap slot, neck lanyard adapter, flat back for the table</dd>
+      </dl>
+    </aside>
+  </div>
+</header>
+
+<section id="principles" class="tight">
+  <div class="wrap">
+    <div class="eyebrow">Three rules that shape every decision</div>
+    <div class="grid grid-3">
+      <div class="card has-bar"><span class="accent-bar teal"></span>
+        <h3>The Pocket is a thin client</h3>
+        <p>It captures audio, shows a screen, plays sound and reads a button. Everything that needs a brain (speech, translation, Pebble's personality) lives in the cloud, so the device firmware barely changes when the classroom needs change.</p>
+      </div>
+      <div class="card has-bar"><span class="accent-bar amber"></span>
+        <h3>The phone is the remote, not the brain</h3>
+        <p>The PebblePath app (or a browser) is where a parent uploads songs, approves contacts and picks the day's mode. The Pocket talks to the cloud directly over Wi-Fi, so it keeps working when the phone is in a bag.</p>
+      </div>
+      <div class="card has-bar"><span class="accent-bar terracotta"></span>
+        <h3>Offline never feels broken</h3>
+        <p>Songs and calm clips are copied to the microSD card, so Learn and Calm work with no network at all. Only Translate and Hello need a connection, and the screen says so gently.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="diagram">
+  <div class="wrap">
+    <div class="eyebrow">How it fits together</div>
+    <h2 style="margin-bottom:22px">Device, hub and cloud</h2>
+    <div class="card" style="padding:18px 18px 12px">
+      <div class="diagram-wrap">
+        <svg class="diagram" viewBox="0 0 1100 600" role="img" aria-label="Architecture diagram: Pebble Pocket device on the left, PebblePath app as hub in the middle, PebblePath cloud on the right, with approved contacts and the media library attached to the cloud.">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#3D9B8F"/>
+            </marker>
+            <marker id="arr-warm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#C67B5C"/>
+            </marker>
+            <marker id="arr-soft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="rgba(44,62,64,0.35)"/>
+            </marker>
+          </defs>
+
+          <!-- DEVICE -->
+          <rect class="box" x="30" y="60" width="300" height="400" rx="22"/>
+          <rect class="chip" x="30" y="60" width="300" height="64" rx="22"/>
+          <rect class="chip" x="30" y="100" width="300" height="24"/>
+          <use href="#ripple-stone" x="54" y="76" width="32" height="32" style="color:#1F5C54"/>
+          <text class="t-title" x="96" y="92">Pebble Pocket</text>
+          <text class="t-sub" x="96" y="110">ESP32-S3 · firmware (ESP-IDF)</text>
+
+          <text class="t-item strong" x="54" y="152">Wake + capture</text>
+          <text class="t-item" x="54" y="170">"Hey Pebble" on-device (ESP-SR) or side button</text>
+          <text class="t-item" x="54" y="186">Dual mics → echo cancelled → Opus stream</text>
+
+          <text class="t-item strong" x="54" y="216">Show + play</text>
+          <text class="t-item" x="54" y="234">LVGL faces: idle, listen, reply, Learn, Calm, Hello</text>
+          <text class="t-item" x="54" y="250">Plays Pebble's voice and microSD media</text>
+
+          <text class="t-item strong" x="54" y="280">Local library (microSD)</text>
+          <text class="t-item" x="54" y="298">Songs, clips, calm loops synced from cloud</text>
+          <text class="t-item" x="54" y="314">Works fully offline</text>
+
+          <text class="t-item strong" x="54" y="344">Session state</text>
+          <text class="t-item" x="54" y="362">Device key, child profile id, today's mode</text>
+          <text class="t-item" x="54" y="378">Battery, Wi-Fi, last sync</text>
+
+          <rect x="54" y="404" width="230" height="34" rx="10" fill="rgba(198,123,92,0.10)"/>
+          <text class="t-item" x="66" y="426" style="fill:#A8624A;font-weight:600">Hold 1.5 s → records a Hello (≤ 20 s)</text>
+
+          <!-- HUB (bottom middle, out of the conversation corridor) -->
+          <rect class="box sand" x="400" y="400" width="300" height="160" rx="22"/>
+          <text class="t-title" x="424" y="432">PebblePath app</text>
+          <text class="t-sub" x="424" y="450">iPhone · or the Portal in a browser</text>
+          <text class="t-item" x="424" y="478">Pairs over BLE, hands the Pocket its Wi-Fi</text>
+          <text class="t-item" x="424" y="496">Uploads songs, videos, calm clips</text>
+          <text class="t-item" x="424" y="514">Approves Hello contacts, picks today's mode</text>
+          <text class="t-item" x="424" y="532">Sees the day: what was asked, what played</text>
+          <text class="t-item" x="424" y="550" style="fill:#7A7A7A">Same Pebble, same child profile as the app</text>
+
+          <!-- CLOUD -->
+          <rect class="box teal" x="730" y="60" width="340" height="400" rx="22"/>
+          <text class="t-title" x="754" y="92" style="fill:#fff">PebblePath cloud</text>
+          <text class="t-sub" x="754" y="110" style="fill:#7DD4C8">Firebase · Cloud Functions</text>
+
+          <rect x="754" y="126" width="292" height="90" rx="14" fill="rgba(255,255,255,0.10)"/>
+          <text class="t-item strong" x="768" y="146" style="fill:#fff">Pocket session (WebSocket)</text>
+          <text class="t-item" x="768" y="164" style="fill:rgba(255,255,255,.85)">Audio in → speech-to-text (fr / en, auto)</text>
+          <text class="t-item" x="768" y="180" style="fill:rgba(255,255,255,.85)">Text → Claude API with Pebble prompt + child</text>
+          <text class="t-item" x="768" y="196" style="fill:rgba(255,255,255,.85)">Reply → text-to-speech (Pebble voice) → back</text>
+
+          <rect x="754" y="224" width="292" height="44" rx="14" fill="rgba(255,255,255,0.10)"/>
+          <text class="t-item strong" x="768" y="242" style="fill:#fff">Media service</text>
+          <text class="t-item" x="768" y="259" style="fill:rgba(255,255,255,.85)">Transcodes uploads, builds the sync manifest</text>
+
+          <rect x="754" y="276" width="292" height="44" rx="14" fill="rgba(255,255,255,0.10)"/>
+          <text class="t-item strong" x="768" y="294" style="fill:#fff">Fleet</text>
+          <text class="t-item" x="768" y="311" style="fill:rgba(255,255,255,.85)">Device keys, OTA firmware, config, health</text>
+
+          <rect x="754" y="328" width="292" height="44" rx="14" fill="rgba(255,255,255,0.10)"/>
+          <text class="t-item strong" x="768" y="346" style="fill:#fff">Hello delivery</text>
+          <text class="t-item" x="768" y="363" style="fill:rgba(255,255,255,.85)">Stores the clip, notifies only approved contacts</text>
+
+          <rect x="754" y="380" width="292" height="60" rx="14" fill="rgba(255,255,255,0.10)"/>
+          <text class="t-item strong" x="768" y="400" style="fill:#fff">Child profile + day view</text>
+          <text class="t-item" x="768" y="417" style="fill:rgba(255,255,255,.85)">Transcripts and plays sit with the child's other</text>
+          <text class="t-item" x="768" y="432" style="fill:rgba(255,255,255,.85)">PebblePath signals, same retention as chat</text>
+
+          <!-- CONTACTS + LIBRARY (below cloud) -->
+          <rect class="box" x="730" y="500" width="160" height="70" rx="16"/>
+          <text class="t-item strong" x="750" y="528">Approved contacts</text>
+          <text class="t-item" x="750" y="546">Grandparents, carer</text>
+          <text class="t-item" x="750" y="561" style="fill:#7A7A7A">via PebblePath app</text>
+
+          <rect class="box" x="910" y="500" width="160" height="70" rx="16"/>
+          <text class="t-item strong" x="930" y="528">Media library</text>
+          <text class="t-item" x="930" y="546">Firebase Storage</text>
+          <text class="t-item" x="930" y="561" style="fill:#7A7A7A">songs · clips · calm</text>
+
+          <!-- EDGES: device <-> cloud, in the open corridor -->
+          <path class="edge" d="M330,150 L730,150" marker-end="url(#arr)"/>
+          <text class="t-edge" x="530" y="143" text-anchor="middle">audio + button events</text>
+          <path class="edge" d="M730,192 L330,192" marker-end="url(#arr)"/>
+          <text class="t-edge" x="530" y="185" text-anchor="middle">Pebble's voice + screen text</text>
+          <path class="edge dashed" d="M730,246 L330,246" marker-end="url(#arr)"/>
+          <text class="t-edge" x="530" y="239" text-anchor="middle">media sync to microSD, on charge</text>
+          <path class="edge dashed" d="M730,298 L330,298" marker-end="url(#arr)"/>
+          <text class="t-edge" x="530" y="291" text-anchor="middle">OTA firmware · config</text>
+          <path class="edge warm" d="M330,350 L730,350" marker-end="url(#arr-warm)"/>
+          <text class="t-edge warm" x="530" y="343" text-anchor="middle">Hello clip (Opus, ≤ 20 s)</text>
+
+          <!-- EDGES: hub -->
+          <path class="edge soft" d="M700,440 L730,440" marker-end="url(#arr-soft)"/>
+          <text class="t-edge" x="715" y="431" text-anchor="middle" style="fill:#7A7A7A">admin</text>
+          <path class="edge soft dashed" d="M400,440 L330,440" marker-end="url(#arr-soft)"/>
+          <text class="t-edge" x="365" y="431" text-anchor="middle" style="fill:#7A7A7A">BLE setup</text>
+
+          <!-- EDGES: cloud -> contacts/library -->
+          <path class="edge warm" d="M810,460 L810,500" marker-end="url(#arr-warm)"/>
+          <path class="edge soft" d="M990,460 L990,500" marker-end="url(#arr-soft)" marker-start="url(#arr-soft)"/>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><i></i> live conversation path (Wi-Fi)</span>
+        <span><i class="dashed"></i> background sync</span>
+        <span><i class="warm"></i> Hello message</span>
+        <span><i class="soft"></i> setup and admin</span>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:14px;max-width:80ch">The Pocket never holds an API key for Claude, a speech provider or a contact's phone number. It holds one device key that identifies it to PebblePath's cloud, the same way the iOS app holds a user session. Everything sensitive stays server-side and can be rotated without touching the device.</p>
+  </div>
+</section>
+
+<section id="flows" style="background:var(--sand-light)">
+  <div class="wrap">
+    <div class="eyebrow">The four things it does</div>
+    <h2 style="margin-bottom:22px">Each one, end to end</h2>
+    <div class="grid grid-2">
+
+      <div class="card">
+        <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
+        <span class="pill amber">Translate</span>
+        <h3 style="margin-top:12px">"Hey Pebble, comment on dit papillon ?"</h3>
+        <p>Wake word or a single press. The Pocket streams what it hears; the cloud detects the language, asks Claude as Pebble, and streams the answer back in Pebble's voice while the words appear on screen.</p>
+        <div class="flow">
+          <span class="n">1</span><span class="s"><b>Listen.</b> Ring pulses teal; the mics are open for up to 8 seconds or until silence.</span>
+          <span class="n">2</span><span class="s"><b>Think.</b> Speech-to-text (French or English, auto) → Claude with Pebble's prompt and the child's age.</span>
+          <span class="n">3</span><span class="s"><b>Answer.</b> Text-to-speech in Pebble's voice, first audio within about a second; screen shows both languages.</span>
+          <span class="n">4</span><span class="s"><b>Again?</b> A tap repeats it slowly. Silence after 6 seconds returns to idle.</span>
+        </div>
+        <div class="say"><span class="who">Child</span>Comment on dit "papillon" ?</div>
+        <div class="say pebble"><span class="who">Pebble</span>Papillon is <b>butterfly</b>. Want to hear it again, slowly?</div>
+      </div>
+
+      <div class="card">
+        <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
+        <span class="pill purple">Learn</span>
+        <h3 style="margin-top:12px">Your songs and videos, on the wrist</h3>
+        <p>A parent drops audio or video into the PebblePath app. The cloud converts it to a Pocket-friendly format, and the Pocket copies it to microSD next time it charges. A scrollable selector on the face lists them; a tap plays.</p>
+        <div class="flow">
+          <span class="n">1</span><span class="s"><b>Upload.</b> Any audio or video from the phone, browser or a shared link.</span>
+          <span class="n">2</span><span class="s"><b>Prepare.</b> Audio to 48 kHz Opus; video to 410 × 502 at 15 fps with the sound track split out.</span>
+          <span class="n">3</span><span class="s"><b>Sync.</b> Manifest diff on charge; nothing is streamed live, so playback is instant and offline.</span>
+          <span class="n">4</span><span class="s"><b>Choose.</b> Selector shows a cover, a title, and a duration; long titles scroll.</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
+        <span class="pill blue">Calm</span>
+        <h3 style="margin-top:12px">A gallery for the hard minutes</h3>
+        <p>Raindrops on a window, a slow tide, drifting dandelion seeds. Short loops that ask nothing of a child, for when a moment has gone sideways or when everyone needs to stay still for a photo. Chosen by the parent, played by the child.</p>
+        <div class="flow">
+          <span class="n">1</span><span class="s"><b>Curate.</b> A starter set ships in firmware; parents add their own loops through the app.</span>
+          <span class="n">2</span><span class="s"><b>Open.</b> Swipe left from idle; large tiles, one per loop, no text needed.</span>
+          <span class="n">3</span><span class="s"><b>Play.</b> Full-face loop with a soft sound bed; brightness eases down after 30 seconds.</span>
+          <span class="n">4</span><span class="s"><b>Leave.</b> Any button press returns to idle. No timers, no rewards.</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
+        <span class="pill terracotta">Hello</span>
+        <h3 style="margin-top:12px">Press and hold to send a hello</h3>
+        <p>Hold the side button for a second and a half; a ring fills while the child talks. Let go and the clip goes to the approved contacts only. Grandparents get a notification from the PebblePath app and hear it there. No open messaging, no replies to the device in v0.1.</p>
+        <div class="flow">
+          <span class="n">1</span><span class="s"><b>Hold.</b> Haptic tick at 1.5 seconds, ring starts filling, 20-second cap.</span>
+          <span class="n">2</span><span class="s"><b>Release.</b> Clip is stored and the face shows "Sent to Mamie and Papi" with a small wave.</span>
+          <span class="n">3</span><span class="s"><b>Deliver.</b> Cloud pushes to approved contacts' PebblePath app; falls back to an SMS link that expires.</span>
+          <span class="n">4</span><span class="s"><b>Trust.</b> Contacts are added and removed in the app by a parent, never on the device.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="constraints">
+  <div class="wrap">
+    <div class="eyebrow">Known constraints, decided up front</div>
+    <h2 style="margin-bottom:22px">What the hardware makes us do</h2>
+    <div class="grid grid-2">
+      <div class="card constraint">
+        <h3><span class="dot"></span>Build the audio path on ESP-IDF, not Arduino</h3>
+        <p>The ES8311 codec and the ES7210 echo canceller share an I2S clock. Full duplex works when the power rails come up first, then the I2S master clock, then both codecs as slaves. Arduino examples hide that order; ESP-IDF exposes it.</p>
+      </div>
+      <div class="card constraint">
+        <h3><span class="dot"></span>Assume about an hour of screen-on time</h3>
+        <p>The 400 mAh cell gives roughly an hour at full brightness and three to four with the screen off. The face dims after 10 seconds, sleeps after 30, and wakes on button or wrist raise. Learn and Calm run with the screen at 40 percent.</p>
+      </div>
+      <div class="card constraint">
+        <h3><span class="dot"></span>No Bluetooth speaker mode</h3>
+        <p>The ESP32-S3 has Bluetooth LE only, so the iPhone cannot treat the Pocket as a speaker. Media reaches the Pocket through the cloud sync instead, which is why the microSD card exists in this design.</p>
+      </div>
+      <div class="card constraint">
+        <h3><span class="dot"></span>One watt of speaker</h3>
+        <p>Loud enough for one child at arm's length, not for a room. Pebble speaks close and slow. A future tabletop dock could add a proper speaker over the reserved I2C and UART pads.</p>
+      </div>
+      <div class="card constraint">
+        <h3><span class="dot"></span>Wake word comes second</h3>
+        <p>Espressif's ESP-SR runs wake words on-device, but a custom "Hey Pebble" model has to be trained through their service. v0.1 ships button-first with the stock wake word for testing; "Hey Pebble" lands in v0.2.</p>
+      </div>
+      <div class="card constraint">
+        <h3><span class="dot"></span>Privacy by construction</h3>
+        <p>Audio only leaves the device while the ring is pulsing. Nothing is recorded in idle. Transcripts live under the child's PebblePath profile with the same retention as chat, and a parent can wipe the device from the app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="build" style="background:var(--sand-light)">
+  <div class="wrap">
+    <div class="eyebrow">Build plan</div>
+    <h2 style="margin-bottom:8px">Five short phases</h2>
+    <p class="muted" style="margin-bottom:20px">Each phase ends with something a child can hold. Nothing here needs the phone app to be finished; the Portal in a browser is enough for the parent side until the iOS work lands.</p>
+
+    <div class="phase">
+      <div class="when">Phase 0<small>week of arrival</small></div>
+      <div><h3>Hello, screen</h3>
+        <p>Flash the Waveshare demo, then a bare ESP-IDF project that draws the idle face in LVGL, reads the buttons, and joins Wi-Fi from a hard-coded config. Confirm full-duplex audio with a beep-and-record test.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 1<small>2 weeks</small></div>
+      <div><h3>Translate, button-first</h3>
+        <p>Cloud Function opens a WebSocket per device. Pocket streams Opus on press; cloud runs speech-to-text, calls Claude with the Pebble prompt, streams text-to-speech back. Screen shows both languages. This is the moment the device becomes Pebble.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 2<small>1 week</small></div>
+      <div><h3>Learn and Calm from microSD</h3>
+        <p>Media upload in the Portal, transcode in a Function, manifest sync on charge, selector and gallery on the face. Ship a starter set of three calm loops inside the firmware so Calm works on day one.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 3<small>1 week</small></div>
+      <div><h3>Hello to approved contacts</h3>
+        <p>Hold-to-record with the filling ring, upload, contact approval in the Portal, push to the PebblePath app with an expiring link fallback. Parents see every Hello in the day view.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 4<small>ongoing</small></div>
+      <div><h3>"Hey Pebble", OTA, and the day view</h3>
+        <p>Train the custom wake word, add over-the-air firmware so the classroom never needs a cable, and surface the Pocket's day (what was asked, what played, battery) in the app next to the child's other PebblePath signals.</p></div>
+    </div>
+
+    <div class="card" style="margin-top:28px">
+      <h3>Suggested repo layout</h3>
+      <table class="spec" style="margin-top:10px">
+        <tr><th><code>firmware/</code></th><td>ESP-IDF project: LVGL face, audio pipeline, WebSocket client, microSD sync, OTA.</td></tr>
+        <tr><th><code>cloud/</code></th><td>Firebase Cloud Functions: pocket session, media service, hello delivery, fleet. Reuses the existing PebblePath Firebase project.</td></tr>
+        <tr><th><code>portal/</code></th><td>Parent-side screens for the Pocket inside the existing Portal (Lit): pair, media, contacts, day view.</td></tr>
+        <tr><th><code>docs/</code></th><td>These pages. <code>index.html</code> is the architecture, <code>screens.html</code> the face mockups. Served by GitHub Pages.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Pebble Pocket · internal working document · PebblePath</span>
+    <span>Hardware: Waveshare ESP32-S3-Touch-AMOLED-2.06 · Cloud: Firebase + Claude API</span>
+  </div>
+</footer>
+
+</body>
+</html>
