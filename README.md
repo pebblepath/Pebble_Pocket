@@ -28,7 +28,7 @@ GitHub: https://github.com/pebblepath/Pebble_Pocket
 
 ## Architecture in one paragraph
 
-The Pocket is a thin client. It captures audio, draws faces, plays sound and reads two buttons. A WebSocket to a PebblePath Cloud Run service (Cloud Functions cannot hold WebSockets) carries audio up and Pebble's voice plus screen text down; the service does speech-to-text, calls the Claude API with the Pebble system prompt and the child's context, and streams text-to-speech back. Songs, videos and calm loops are uploaded in the PebblePath app or Portal, transcoded by a Function, and synced to the microSD card while the Pocket charges, so Learn and Calm work offline. Hello clips go to the cloud and are pushed only to contacts a parent approved in the app. The Pocket holds one device key and no third-party secrets.
+The Pocket is a thin client. It captures audio, draws faces, plays sound and reads two buttons. A WebSocket to a PebblePath Cloud Run service (Cloud Functions cannot hold WebSockets) carries audio up and Pebble's voice plus screen text down; the service does speech-to-text, calls the Claude API with the Pebble system prompt and the child's context, and streams text-to-speech back. Songs and calm loops are uploaded in the PebblePath app or Portal, transcoded by a Function, and synced to the microSD card while the Pocket charges, so Learn and Calm work offline. Hello clips go to the cloud and are pushed only to contacts a parent approved in the app. The Pocket holds one device key and no third-party secrets.
 
 ## Planned repo layout
 

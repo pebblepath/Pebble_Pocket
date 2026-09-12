@@ -7,7 +7,7 @@ Read this first. It is the complete context for building Pebble Pocket, written 
 Pebble Pocket is PebblePath's advisor, Pebble, made physical: a small wearable for a child aged three and up (Thomas is the sole tester until the legal terms are updated; Felix will be the first child to wear it after that), worn on a breakaway neck lanyard or stood on a table. **This is an internal prototype between the founders.** Nothing is sold or shared publicly; if the proof of concept is good we revisit compliance, safety and scope. It does four things and nothing else:
 
 1. **Translate.** Child presses the top side button, BOOT (later: says "Hey Pebble"), asks something in French or English, and Pebble answers aloud in the other language, in Pebble's own warm tone. The face shows only the two words being taught.
-2. **Learn.** Plays songs and short videos a parent uploaded, from the microSD card, offline.
+2. **Learn.** Plays songs a parent uploaded, from the microSD card, offline. Video is out of scope.
 3. **Calm.** Full-face ambient loops (rain, tide, seeds, snow, a family photo) for hard moments. No timer, no reward.
 4. **Hello.** Hold BOOT, talk for up to 20 s, release, and the clip goes to contacts a parent approved (grandparents, carer). No inbound messages in v0.1.
 
@@ -43,7 +43,7 @@ Reference code (corrected 2026-09-12 after reading the sources):
 - **ES8311 and ES7210 share all three I2S clock lines** (MCLK 16, BCLK 41, LRCK 45). So playback and recording must run at **one sample rate** (xiaozhi uses 24 kHz). Bring-up order: set the AXP2101 rails explicitly (Waveshare's examples rely on power-on defaults), then start the I2S master clock, then configure both codecs. **Use ESP-IDF for the audio path.** No hardware evidence yet that this works on IDF 6.x; xiaozhi recommends v6.1.
 - **Echo cancellation is software.** Neither codec does it: the speaker output loops back into ES7210 MIC3 as a reference and ESP-SR cancels the echo. One mic is used for voice; the second is unused.
 - **PWR is the power chip's on/off key.** Holding it about 4 to 6 s powers the board off, which is why Hello is held on BOOT. BOOT is GPIO0, a strapping pin: held down during a reset, it enters download mode.
-- **microSD is wired 1-bit only.** Syncs are slow and full-screen video is unrealistic.
+- **microSD is wired 1-bit only.** Syncs are slow, which is one reason video is out of scope.
 - **Flash is 32 MB but the examples configure 16 MB.** Use a 32 MB partition table.
 - **Do not provision Wi-Fi on the factory firmware.** It talks to xiaozhi's servers. Build from source with your own server address, and erase the flash before a child handles the board.
 - **Battery may be about 100 mAh, not 400.** One buyer measured under 400 mWh from empty to full. Measure it before charging unattended.
@@ -106,7 +106,7 @@ Key decisions, with reasons:
 The child cannot read. Every face follows these rules; `docs/screens.html` shows all twelve.
 
 - **One shape per face**, centred. If a state needs two things, one is spoken by Pebble instead.
-- **Words only when teaching.** The only text on a child-facing face is the word pair Pebble is teaching (French in amber `#D4A843`, English in white). Status, names, titles, errors: spoken, or shown to the parent in the app. The small clock along the top edge, tucked inside the corner curve, is for the grown-up. No battery indicator on any face: the Pocket is used in short bursts and the wearer should not be distracted.
+- **Words only when teaching.** The only text on a child-facing face is the word pair Pebble is teaching (French in amber `#D4A843`, English in white). Status, names, titles, errors: spoken, or shown to the parent in the app. No clock and no battery indicator on any face: the Pocket is used in short bursts and nothing should distract the wearer.
 - **Colour is the label.** Teal glow `#7DD4C8` = Pebble listening or talking. Amber = French. Terracotta `#C67B5C` = the one action that leaves the device (Hello). Parents assign a colour per song, so tiles carry an icon and a colour, never a title.
 - **Tap targets ≥ 96 px at 1×**, which is 7.7 mm on this panel (112 px if we decide we want 9 mm). Tiles fill the face in twos. Nothing in corners: the R9.2 screen corners are about 114 px at 1×, so corner content clips.
 - **Buttons are the safety net.** BOOT (top): press to talk, hold 1.5 s for Hello, press to pause while a song plays. PWR (bottom): wake, and home from anywhere. A terracotta sticker marks BOOT so a child can find the Hello button.
@@ -114,18 +114,18 @@ The child cannot read. Every face follows these rules; `docs/screens.html` shows
 - **Motion (QMI8658 IMU) only makes it easier, never a command.** (1) The face turns itself over when the case is upside down, which is what happens when a child lifts a lanyard-worn Pocket to their eyes. Lying flat, it keeps its last orientation so nothing turns mid-tap. (2) Face-down means asleep: screen off and microphone off, nothing can be recorded. (3) Hold for Hello is ignored while face-down, so no pocket hellos. (4) Raise to wake. No shake or tilt gestures.
 - **No emoji, ever.** Faces use only the icon set and animations on `docs/screens.html`.
 - **Nothing to finish, nothing to win.** No streaks, stars, timers or prompts.
-- **Icons:** Phosphor Icons v2.1.1 (MIT), mirroring the SF Symbols style of the PebblePath iOS app: Fill style for solid shapes (mic, note, film, play, pause, drop, flower, heart, cloud-off, bolt, house) and Bold for line glyphs (replay, waves, snowflake, tick, arrow). SF Symbols themselves are licensed for Apple platforms, so they cannot ship on the Pocket. On the firmware the set converts to an LVGL font. The ripple stone is the only "character"; nothing has a face. See the icon sheet on `docs/screens.html`.
+- **Icons:** Phosphor Icons v2.1.1 (MIT), mirroring the SF Symbols style of the PebblePath iOS app: Fill style for solid shapes (mic, note, play, pause, drop, flower, heart, cloud-off, bolt, house) and Bold for line glyphs (replay, waves, snowflake, tick, arrow). SF Symbols themselves are licensed for Apple platforms, so they cannot ship on the Pocket. On the firmware the set converts to an LVGL font. The ripple stone is the only "character"; nothing has a face. See the icon sheet on `docs/screens.html`.
 - **Dark faces** are the wearable exception to PebblePath's light-first rule, because black pixels are free on AMOLED. The dark mesh gradient keeps it PebblePath rather than generic gadget black.
 
 ### The twelve faces
 
 | # | Face | What is on it |
 |---|---|---|
-| 1 | Home | Ripple stone, centred and large. Three faint hint icons at the bottom (note, drop, heart). Tiny clock. |
+| 1 | Home | Ripple stone, large, a little above centre. Three faint hint icons at the bottom (note, drop, heart). Nothing else. |
 | 2 | Listening | Big teal mic in a pulsing ring, three bouncing dots. No text. |
 | 3 | Answer (fr→en) | `papillon` (amber) ↓ `butterfly` (white), one round replay button. |
 | 4 | Answer (en→fr) | `I'm hungry` ↓ `J'ai faim` (amber), replay. |
-| 5 | Songs | 2 × 2 colour tiles, note or film icon, selected tile outlined. Four songs, chosen by a parent in the app; nothing to scroll. |
+| 5 | Songs | 2 × 2 colour tiles with a note icon, selected tile outlined. Four songs, chosen by a parent in the app; nothing to scroll. |
 | 6 | Playing | The chosen tile enlarged, progress line, one pause button. |
 | 7 | Calm | Tiles: rain, seeds, tide (wide), snow, family photo (home icon until a parent adds a photo). Icons only. |
 | 8 | Calm: rain | Full-face animated loop, nothing on top. |
@@ -165,24 +165,22 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 
 | Phase | Deliverable | Notes |
 |---|---|---|
-| **0** · week of arrival | Waveshare demo flashed; then a bare ESP-IDF project: home face in LVGL, both buttons, Wi-Fi from a hard-coded config, **beep-and-record full-duplex audio test** | Proves the shared-I2S-clock bring-up. Nothing else matters until this passes. |
+| **0** · week of arrival | Waveshare diagnostics flashed; then the xiaozhi-esp32 fork built for this board with our own server address: home face in LVGL, both buttons, Wi-Fi from a hard-coded config, **beep-and-record full-duplex audio test** | Proves the shared-I2S-clock bring-up. Nothing else matters until this passes. |
 | **1** · 2 weeks | Translate, button-first | Cloud Run service with a WebSocket per device (Firebase Cloud Functions cannot accept WebSocket connections); device streams Opus on press; STT → Claude (Pebble prompt) → TTS streamed back; faces 2, 3, 4. This is when it becomes Pebble. |
-| **2** · 1 week | Learn and Calm from microSD | Upload in Portal, transcode Function (audio → 24 kHz Opus to match the shared I2S clock; video size to decide, since 1-bit microSD rules out full-screen), manifest diff on charge, faces 5 to 8. Ship four calm loops (rain, seeds, tide, snow) inside the firmware; the family-photo tile is filled by a parent. |
+| **2** · 1 week | Learn and Calm from microSD | Upload in Portal, transcode Function (audio → 24 kHz Opus to match the shared I2S clock), manifest diff on charge, faces 5 to 8. Ship four calm loops (rain, seeds, tide, snow) inside the firmware; the family-photo tile is filled by a parent. |
 | **3** · 1 week | Hello | Hold-to-record ring, upload, contact approval in Portal, push to PebblePath app with expiring link fallback, faces 9, 10. |
 | **4** · ongoing | "Hey Pebble", OTA, day view | ESP-SR custom wake word; OTA so the classroom never needs a cable; the Pocket's day in the app next to the child's other signals. |
 
 ### Phase 0, concretely
 
-1. Build Waveshare's ESP-IDF examples (`01_AXP2101`, `05_Spec_Analyzer`, `06_videoplayer`) with ESP-IDF v6.1 and flash them. Confirm the screen, touch, buttons, battery readout, mics and speaker all work on your unit before writing anything. Do not put the factory firmware on Wi-Fi.
+1. Build Waveshare's ESP-IDF examples (`01_AXP2101`, `05_Spec_Analyzer`, and `06_videoplayer` purely as a speaker and microSD test) with ESP-IDF v6.1 and flash them. Confirm the screen, touch, buttons, battery readout, mics and speaker all work on your unit before writing anything. Do not put the factory firmware on Wi-Fi.
 2. Confirm `firmware/docs/pinmap.md` on the bench (written from source on 2026-09-12): tick each row, record AXP2101 rail voltages, and measure the screen's corner radius and safe area.
-3. New ESP-IDF project in `firmware/` with components: `board` (PMU, display, touch, buttons, IMU), `audio` (codec bring-up, I2S full duplex, Opus encode/decode via `esp-audio-codec` or `libopus`), `ui` (LVGL 9, faces as separate screens), `net` (Wi-Fi, WebSocket client), `storage` (microSD, manifest).
-4. Home face (face 1) in LVGL with the ripple stone, hint row, clock, battery.
+3. Fork github.com/78/xiaozhi-esp32 (MIT) into `firmware/`, pinned to a known commit. Keep its board layer (`main/boards/waveshare/esp32-s3-touch-amoled-2.06/`), audio pipeline (codecs, echo cancellation, Opus), WebSocket protocol and OTA. Replace its default server address (`api.tenclass.net`) before the board ever joins Wi-Fi, turn the wake word off, strip its remote-firmware tools, switch to the 32 MB partition table, and replace its UI with the Pebble faces. Add microSD songs and Hello later (phases 2 and 3). Keep the MIT licence notice.
+4. Home face (face 1) in LVGL with the ripple stone and hint row.
 5. Beep-and-record test: play a 1 kHz tone on ES8311 while recording from ES7210; assert mic energy rises during tone windows. Log to serial. When this passes, Phase 0 is done.
 
 ## 9. Open questions for Thomas
 
-- **Firmware starting point:** fork xiaozhi-esp32 (MIT, already supports this board, recommended by the 2026-09-12 research) or build a bare ESP-IDF project from Waveshare's examples.
-- **Videos on Learn:** a small window (Waveshare's player uses 320 × 200), audio only, or drop video for the proof of concept.
 - Which STT and TTS providers for the voice service. The research recommends Deepgram Nova-3 (with the training opt-out on every request) and Google Chirp 3 HD, with OpenAI as the fallback. ElevenLabs and Cartesia terms bar use with young children. Latency to first audio should be about a second.
 - Whether the Pebble TTS voice is a fixed provider voice or something PebblePath already uses in the app.
 - Contact delivery: push to the PebblePath app only, or also an SMS/iMessage link for grandparents without the app.
@@ -214,3 +212,7 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 - Screens round 2: spec cards fixed, Home stone enlarged (92 to 120 px at half size), no battery indicator on any face, icons replaced with Phosphor Icons (Fill for solid shapes, Bold for line glyphs) to mirror the iOS app's SF Symbols style, rain face rebuilt as a dusk scene, contact photos cropped from the founders' photo (original stays local; it carries GPS metadata and `*.heic` is gitignored).
 - Repo checkout moved to `PebblePath/pebble-pocket` (already excluded from the PebblePath backup).
 - Wi-Fi: the factory firmware never joins any network. Our own firmware joins a phone hotspot or guest network during bench work, then home Wi-Fi once it only talks to PebblePath's own server.
+- **Firmware: fork xiaozhi-esp32** (MIT), chosen by Thomas on 2026-09-12 after the research recommended it. It already runs push-to-talk voice, echo cancellation and the power and audio bring-up on this exact board.
+- **Video is out of scope.** Learn is songs only (note icon on every tile); the film icon is removed from the set.
+- **No clock on Home.** Home is the stone (raised a little above centre) and the three hint icons.
+- **Calm: either button press goes home.**

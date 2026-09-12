@@ -77,8 +77,9 @@
       linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
   }
   /* No battery indicator on any face: the Pocket is used in short bursts and the wearer should not be distracted.
-     The clock sits inside the R9.2 corner curve (at 0.5×, x ≥ 20 px at the top edge would still clip). */
-  .face .clock { position: absolute; top: 14px; left: 30px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.55); font-family: var(--font-body); }
+     No clock either: Home is the stone and nothing else. */
+  /* Home: the stone sits a little above centre, clear of the hint row */
+  .face .center.home { padding-bottom: 44px; }
 
   .face .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 16px; gap: 10px; }
   .face .word { font-weight: 800; font-size: 26px; line-height: 1; letter-spacing: -0.01em; }
@@ -241,7 +242,6 @@
   <symbol id="i-seed" viewBox="0 0 256 256"><!-- Phosphor flower (fill) --><title>flower</title><path fill="currentColor" d="M210.35,129.36c-.81-.47-1.7-.92-2.62-1.36.92-.44,1.81-.89,2.62-1.36a40,40,0,1,0-40-69.28c-.81.47-1.65,1-2.48,1.59.08-1,.13-2,.13-3a40,40,0,0,0-80,0c0,.94,0,1.94.13,3-.83-.57-1.67-1.12-2.48-1.59a40,40,0,1,0-40,69.28c.81.47,1.7.92,2.62,1.36-.92.44-1.81.89-2.62,1.36a40,40,0,1,0,40,69.28c.81-.47,1.65-1,2.48-1.59-.08,1-.13,2-.13,2.95a40,40,0,0,0,80,0c0-.94-.05-1.94-.13-2.95.83.57,1.67,1.12,2.48,1.59A39.79,39.79,0,0,0,190.29,204a40.43,40.43,0,0,0,10.42-1.38,40,40,0,0,0,9.64-73.28ZM128,156a28,28,0,1,1,28-28A28,28,0,0,1,128,156Z"/></symbol>
   <symbol id="i-snow" viewBox="0 0 256 256"><!-- Phosphor snowflake (bold) --><title>snowflake</title><path fill="currentColor" d="M227.65,149.14a12,12,0,0,1-8.79,14.51l-20.67,5.08,5.4,20.16a12,12,0,0,1-23.18,6.22l-7.29-27.2L140,148.78V187l20.48,20.48a12,12,0,0,1-17,17L128,209l-15.51,15.52a12,12,0,0,1-17-17L116,187V148.78L82.88,167.91l-7.29,27.2a12,12,0,0,1-23.18-6.22l5.4-20.16-20.67-5.08a12,12,0,1,1,5.72-23.3l27.89,6.85L104,128,70.75,108.8l-27.89,6.85A11.8,11.8,0,0,1,40,116a12,12,0,0,1-2.85-23.65l20.67-5.08-5.4-20.16a12,12,0,0,1,23.18-6.22l7.29,27.2L116,107.21V69L95.52,48.48a12,12,0,0,1,17-17L128,47l15.51-15.52a12,12,0,1,1,17,17L140,69v38.24l33.12-19.12,7.29-27.2a12,12,0,0,1,23.18,6.22l-5.4,20.16,20.67,5.08A12,12,0,0,1,216,116a11.8,11.8,0,0,1-2.87-.35l-27.89-6.85L152,128l33.25,19.2,27.89-6.85A12,12,0,0,1,227.65,149.14Z"/></symbol>
   <symbol id="i-heart" viewBox="0 0 256 256"><!-- Phosphor heart (fill) --><title>heart</title><path fill="currentColor" d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></symbol>
-  <symbol id="i-video" viewBox="0 0 256 256"><!-- Phosphor film-strip (fill) --><title>film-strip</title><path fill="currentColor" d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM184,56h32V72H184ZM72,200H40V184H72ZM72,72H40V56H72Zm48,128H88V184h32Zm0-128H88V56h32Zm48,128H136V184h32Zm0-128H136V56h32Zm48,128H184V184h32v16Z"/></symbol>
   <symbol id="i-check" viewBox="0 0 256 256"><!-- Phosphor check (bold) --><title>check</title><path fill="currentColor" d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
   <symbol id="i-cloud-off" viewBox="0 0 256 256"><!-- Phosphor cloud-slash (fill) --><title>cloud-slash</title><path fill="currentColor" d="M248,128.72A87.74,87.74,0,0,1,222.41,190a4,4,0,0,1-5.77-.16L103.78,65.67a4,4,0,0,1,.39-5.76A87.82,87.82,0,0,1,160.87,40C209.15,40.47,248.38,80.43,248,128.72ZM53.92,34.62A8,8,0,1,0,42.08,45.38L81.33,88.56l-.06.11A64,64,0,0,0,8,153c.53,35.12,29.84,63,65,63h87a87.65,87.65,0,0,0,31.78-5.95l10.3,11.33a8,8,0,0,0,11.33.52,8.32,8.32,0,0,0,.29-11.52Z"/></symbol>
   <symbol id="i-home" viewBox="0 0 256 256"><!-- Phosphor house (fill) --><title>house</title><path fill="currentColor" d="M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z"/></symbol>
@@ -287,14 +287,13 @@
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face mesh-dark">
-            <span class="clock">14:07</span>
-            <div class="center">
+            <div class="center home">
               <svg class="stone"><use href="#ripple-stone"/></svg>
             </div>
             <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
           </div>
         </div>
-        <div class="cap"><b>Home</b><span>Pebble, and nothing else. Tap the stone or press the top side button (BOOT) to talk. The three small icons hint at the swipe order: songs, calm, hello. The clock is for the grown-up.</span></div>
+        <div class="cap"><b>Home</b><span>Pebble, and nothing else. Tap the stone or press the top side button (BOOT) to talk. The three small icons hint at the swipe order: songs, calm, hello. No clock and no battery, so nothing competes with the stone.</span></div>
       </div>
 
       <!-- 2 LISTENING -->
@@ -347,12 +346,12 @@
             <div class="tiles">
               <div class="tile c1 on"><svg><use href="#i-note"/></svg></div>
               <div class="tile c2"><svg><use href="#i-note"/></svg></div>
-              <div class="tile c3"><svg><use href="#i-video"/></svg></div>
+              <div class="tile c3"><svg><use href="#i-note"/></svg></div>
               <div class="tile c4"><svg><use href="#i-note"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Songs</b><span>Four big colour tiles, a note or a film icon, no titles. A parent picks the four songs and each tile's colour in the app, so "the yellow one" is Alouette at home and in class. Four at a time means nothing to scroll.</span></div>
+        <div class="cap"><b>Songs</b><span>Four big colour tiles with a note icon, no titles. Songs only; video is out of scope. A parent picks the four songs and each tile's colour in the app, so "the yellow one" is Alouette at home and in class. Four at a time means nothing to scroll.</span></div>
       </div>
 
       <!-- 6 PLAYING -->
@@ -395,7 +394,7 @@
             <div class="layer" id="rainFar"></div><div class="layer" id="rainNear"></div>
           </div>
         </div>
-        <div class="cap"><b>Calm: rain</b><span>A soft dusk scene with hills and water, two layers of rain, splashes and drips on the glass, and a soft sound bed. Nothing on top of it. Brightness eases down after 30 seconds. The bottom button (PWR) goes home.</span></div>
+        <div class="cap"><b>Calm: rain</b><span>A soft dusk scene with hills and water, two layers of rain, splashes and drips on the glass, and a soft sound bed. Nothing on top of it. Brightness eases down after 30 seconds. Either button goes home.</span></div>
       </div>
 
       <!-- 9 HELLO HOLD -->
@@ -469,7 +468,7 @@
         <div class="fig">
           <div class="watch flipped"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
             <div class="face mesh-dark">
-              <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
+              <div class="center home"><svg class="stone"><use href="#ripple-stone"/></svg></div>
               <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
             </div>
           </div>
@@ -482,7 +481,7 @@
         <div class="fig">
           <div class="watch"><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
             <div class="face mesh-dark">
-              <div class="center"><svg class="stone"><use href="#ripple-stone"/></svg></div>
+              <div class="center home"><svg class="stone"><use href="#ripple-stone"/></svg></div>
               <div class="hint-row"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg><svg><use href="#i-heart"/></svg></div>
             </div>
           </div>
@@ -508,14 +507,13 @@
 <section style="background:var(--sand-light)">
   <div class="wrap">
     <div class="eyebrow">Icon set</div>
-    <h2 style="margin-bottom:8px">Seventeen icons, one family</h2>
+    <h2 style="margin-bottom:8px">Sixteen icons, one family</h2>
     <p class="muted" style="margin-bottom:22px;max-width:70ch">Standard shapes from Phosphor Icons (MIT licence), matched to the SF Symbols style of the PebblePath iOS app: solid shapes use the Fill style, line glyphs (replay, waves, snowflake, tick, arrow) use Bold. They read at 88 px on the panel and 44 px as a hint (44 and 22 px in these half-size mockups). The same set converts to an LVGL font for the firmware. The ripple stone stays PebblePath's own mark and is the only "character".</p>
     <div class="iconsheet">
       <div class="ico"><span class="box"><svg><use href="#ripple-stone"/></svg></span><b>Pebble</b>home, talk</div>
       <div class="ico"><span class="box"><svg><use href="#i-mic"/></svg></span><b>Mic</b>listening</div>
       <div class="ico"><span class="box"><svg><use href="#i-replay"/></svg></span><b>Again</b>repeat slowly</div>
       <div class="ico"><span class="box"><svg><use href="#i-note"/></svg></span><b>Note</b>song</div>
-      <div class="ico"><span class="box"><svg><use href="#i-video"/></svg></span><b>Film</b>video</div>
       <div class="ico"><span class="box"><svg><use href="#i-play"/></svg></span><b>Play</b></div>
       <div class="ico"><span class="box"><svg><use href="#i-pause"/></svg></span><b>Pause</b></div>
       <div class="ico"><span class="box"><svg><use href="#i-drop"/></svg></span><b>Drop</b>calm, rain</div>
@@ -543,7 +541,7 @@
       </div>
       <div class="card">
         <h3>Words only when teaching</h3>
-        <p>The only text on any child-facing face is the pair Pebble is teaching. Status, names, titles and errors are all spoken by Pebble or shown to the parent in the app. The one exception is the small clock on Home, which is for the grown-up.</p>
+        <p>The only text on any child-facing face is the pair Pebble is teaching. Status, names, titles and errors are all spoken by Pebble or shown to the parent in the app. No clock, no battery.</p>
       </div>
       <div class="card">
         <h3>Colour is the label</h3>
@@ -559,7 +557,7 @@
       </div>
       <div class="card">
         <h3>Buttons are the safety net</h3>
-        <p>Top button (BOOT): press to talk, hold for hello. While a song plays, a press pauses it. Bottom button (PWR): wake, and home from anywhere. Swipes go left and right only, so a child who gets lost is one press from the stone.</p>
+        <p>Top button (BOOT): press to talk, hold for hello. While a song plays, a press pauses it; during Calm, either button goes home. Bottom button (PWR): wake, and home from anywhere. Swipes go left and right only, so a child who gets lost is one press from the stone.</p>
       </div>
       <div class="card">
         <h3>Nothing to finish, nothing to win</h3>

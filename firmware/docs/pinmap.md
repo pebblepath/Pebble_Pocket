@@ -78,5 +78,5 @@ xiaozhi sets these explicitly ([XZB] `.cc:27-55`); Waveshare's own examples rely
 - **One audio sample rate at a time.** Both codecs share MCLK, BCLK and LRCK, so playback and recording must run at the same rate. xiaozhi uses 24 kHz; songs get resampled at sync time.
 - **Only one mic is used for voice.** The ES7210 records one mic plus a hardware loopback of the speaker output, and ESP-SR cancels the echo in software. The second mic is unused.
 - **Hello stays on BOOT, not PWR.** A long PWR hold powers the board off. Note that BOOT (GPIO0) held down while the board resets puts it into download mode.
-- **Slow microSD.** 1-bit wiring means slow syncs and no full-screen video; plan for a small video window or audio only.
+- **Slow microSD.** 1-bit wiring means slow syncs. Video is out of scope; songs only.
 - **Flash is 32 MB, but the examples configure 16 MB.** Use xiaozhi's `partitions/v2/32m.csv` and set flash size to 32 MB.

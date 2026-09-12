@@ -148,7 +148,7 @@
       </div>
       <div class="card has-bar"><span class="accent-bar terracotta"></span>
         <h3>Offline never feels broken</h3>
-        <p>Songs and calm clips are copied to the microSD card, so Learn and Calm work with no network at all. Only Translate and Hello need a connection; the face shows a crossed-out cloud with songs and calm still lit, and Pebble says so gently.</p>
+        <p>Songs and calm loops are copied to the microSD card, so Learn and Calm work with no network at all. Only Translate and Hello need a connection; the face shows a crossed-out cloud with songs and calm still lit, and Pebble says so gently.</p>
       </div>
     </div>
   </div>
@@ -190,7 +190,7 @@
           <text class="t-item" x="54" y="250">Plays Pebble's voice and microSD media</text>
 
           <text class="t-item strong" x="54" y="280">Local library (microSD)</text>
-          <text class="t-item" x="54" y="298">Songs, clips, calm loops synced from cloud</text>
+          <text class="t-item" x="54" y="298">Songs and calm loops synced from cloud</text>
           <text class="t-item" x="54" y="314">Works fully offline</text>
 
           <text class="t-item strong" x="54" y="344">Session state</text>
@@ -205,7 +205,7 @@
           <text class="t-title" x="424" y="432">PebblePath app</text>
           <text class="t-sub" x="424" y="450">iPhone · or the Portal in a browser</text>
           <text class="t-item" x="424" y="478">Pairs over BLE, hands the Pocket its Wi-Fi</text>
-          <text class="t-item" x="424" y="496">Uploads songs, videos, calm clips</text>
+          <text class="t-item" x="424" y="496">Uploads songs and calm loops</text>
           <text class="t-item" x="424" y="514">Approves Hello contacts, picks today's mode</text>
           <text class="t-item" x="424" y="532">Sees the day: what was asked, what played</text>
           <text class="t-item" x="424" y="550" style="fill:#7A7A7A">Same Pebble, same child profile as the app</text>
@@ -247,7 +247,7 @@
           <rect class="box" x="910" y="500" width="160" height="70" rx="16"/>
           <text class="t-item strong" x="930" y="528">Media library</text>
           <text class="t-item" x="930" y="546">Firebase Storage</text>
-          <text class="t-item" x="930" y="561" style="fill:#7A7A7A">songs · clips · calm</text>
+          <text class="t-item" x="930" y="561" style="fill:#7A7A7A">songs · calm</text>
 
           <!-- EDGES: device <-> cloud, in the open corridor -->
           <path class="edge" d="M330,150 L730,150" marker-end="url(#arr)"/>
@@ -307,13 +307,13 @@
       <div class="card">
         <svg class="watermark" viewBox="0 0 24 24"><use href="#ripple-stone"/></svg>
         <span class="pill purple">Learn</span>
-        <h3 style="margin-top:12px">Your songs and videos, on the Pocket</h3>
-        <p>A parent drops audio or video into the PebblePath app. The cloud converts it to a Pocket-friendly format, and the Pocket copies it to microSD next time it charges. A parent picks four of them and a colour for each in the app; they appear as four colour tiles on the face, and a tap plays.</p>
+        <h3 style="margin-top:12px">Your songs, on the Pocket</h3>
+        <p>A parent drops songs into the PebblePath app. The cloud converts it to a Pocket-friendly format, and the Pocket copies it to microSD next time it charges. A parent picks four of them and a colour for each in the app; they appear as four colour tiles on the face, and a tap plays.</p>
         <div class="flow">
-          <span class="n">1</span><span class="s"><b>Upload.</b> Any audio or video from the phone, browser or a shared link.</span>
-          <span class="n">2</span><span class="s"><b>Prepare.</b> Audio to 24 kHz Opus, the one rate the shared audio clock allows; video to a small window, since the microSD slot is wired 1-bit.</span>
+          <span class="n">1</span><span class="s"><b>Upload.</b> Any song or audio file from the phone, browser or a shared link. No video.</span>
+          <span class="n">2</span><span class="s"><b>Prepare.</b> Audio to 24 kHz Opus, the one rate the shared audio clock allows.</span>
           <span class="n">3</span><span class="s"><b>Sync.</b> Manifest diff on charge; nothing is streamed live, so playback is instant and offline.</span>
-          <span class="n">4</span><span class="s"><b>Choose.</b> Four big colour tiles, a note or a film icon, no titles; nothing to scroll.</span>
+          <span class="n">4</span><span class="s"><b>Choose.</b> Four big colour tiles with a note icon, no titles; nothing to scroll.</span>
         </div>
       </div>
 
@@ -326,7 +326,7 @@
           <span class="n">1</span><span class="s"><b>Curate.</b> A starter set ships in firmware; parents add their own loops through the app.</span>
           <span class="n">2</span><span class="s"><b>Open.</b> Swipe sideways from home, past the songs; large tiles, one per loop, no text needed.</span>
           <span class="n">3</span><span class="s"><b>Play.</b> Full-face loop with a soft sound bed; brightness eases down after 30 seconds.</span>
-          <span class="n">4</span><span class="s"><b>Leave.</b> The bottom button (PWR) returns home. No timers, no rewards.</span>
+          <span class="n">4</span><span class="s"><b>Leave.</b> Either button returns home. No timers, no rewards.</span>
         </div>
       </div>
 
