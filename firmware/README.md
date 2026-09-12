@@ -26,6 +26,7 @@ firmware/
    idf.py -p /dev/cu.<port> flash monitor
    ```
    If flashing fails: power off, hold BOOT, power on, flash again, then power-cycle.
+4. Haptics check: at startup, hold the board and feel for one long buzz (about half a second), then a short tap on each BOOT press. A buzz means a motor is fitted. **Feeling nothing is inconclusive:** the board's motor drive is weak and may not start every motor, so confirm by looking at pads P1/P2 before deciding (the rest of the firmware works the same either way).
 
 ## What the `pebble-pocket` build variant changes
 
@@ -37,6 +38,7 @@ Set in `xiaozhi/main/boards/waveshare/esp32-s3-touch-amoled-2.06/config.json`, n
 | Flash size and partitions | 16 MB, `partitions/v2/16m.csv` | 32 MB, `partitions/v2/32m.csv` | The chip has 32 MB. |
 | Language | zh-CN | en-US (build flag) | |
 | Wake word | "nihaoxiaozhi" on | off (build flag) | Pocket is button-first. |
+| Haptics (`CONFIG_POCKET_HAPTICS`) | off | on: ALDO3 at 3.0 V, GPIO18 pulses (`pocket_haptics.h`) | Tap (60 ms) on BOOT press, tick (100 ms) at the 1.5 s hold, one 400 ms buzz at startup as a bench test. |
 
 ## Still to change before the board joins Wi-Fi with a child nearby
 
@@ -45,7 +47,9 @@ Set in `xiaozhi/main/boards/waveshare/esp32-s3-touch-amoled-2.06/config.json`, n
 - [ ] Replace the chat and emoji UI with the Pebble faces from `docs/screens.html` (xiaozhi uses a Material Symbols icon font; swap in the Phosphor set).
 - [ ] Replace provisioning with BLE Wi-Fi setup driven from the PebblePath iOS app.
 - [ ] Enable Secure Boot v2 and flash encryption (rehearse on a spare board first; eFuse writes are permanent).
-- [ ] Add microSD songs (phase 2) and Hello record and upload (phase 3).
+- [ ] Add microSD songs (phase 2) and Hello record and upload (phase 3). Play the haptic double tap when a Hello is sent.
+- [ ] Remove the startup buzz once the motor is confirmed (it is a bench self-test).
+- [ ] If a motor is kept and feels weak: lower R12 (4.7 k) to 470 ohm to 1 k so Q1 fully switches on, add a small diode across P1/P2, then re-tune the pulse lengths.
 
 ## Pulling upstream fixes later
 

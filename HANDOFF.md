@@ -28,7 +28,8 @@ Owner: Thomas Paris (thomas@pebblepath.ai). Pebble Pocket is a PebblePath side p
 | Radio | Wi-Fi 802.11 b/g/n 2.4 GHz, Bluetooth 5 LE. **No classic Bluetooth, so no A2DP speaker mode.** |
 | Storage | microSD (TF) slot |
 | Power | AXP2101 PMU, USB-C. Roughly 1 h screen-on at full brightness, 3 to 4 h screen-off, 6 h low power |
-| Buttons | BOOT (top) and PWR (bottom) on the right edge, both programmable, plus touch. The schematic shows a motor driver (GPIO18), but a fitted vibration motor is unconfirmed: check on arrival. No haptics planned |
+| Buttons | BOOT (top) and PWR (bottom) on the right edge, both programmable, plus touch |
+| Haptics | Optional vibration motor pads P1/P2: fed from AXP2101 ALDO3, switched by Q1 (MMBT3904) on GPIO18. Whether a motor is fitted is unconfirmed. The `pebble-pocket` build drives it (see section 5) |
 | Case | 42.00 × 50.80 × 13.60 mm (Waveshare outline drawing). Visible AMOLED 33.09 × 40.51 mm, corner R9.2, so 12.39 px/mm (about 315 ppi). Right edge, top to bottom: mic, BOOT, USB-C, PWR, mic. Left edge: speaker slots and TF card slot. 22 mm flat-end strap slot with screw bar top and bottom |
 | Pads | Reserved I2C, UART and USB pads for peripherals |
 
@@ -46,6 +47,7 @@ Reference code (corrected 2026-09-12 after reading the sources):
 - **microSD is wired 1-bit only.** Syncs are slow, which is one reason video is out of scope.
 - **Flash is 32 MB but the examples configure 16 MB.** Use a 32 MB partition table.
 - **Do not provision Wi-Fi on the factory firmware.** It talks to xiaozhi's servers. Build from source with your own server address, and erase the flash before a child handles the board.
+- **Motor circuit is basic.** No flyback diode is drawn across P1/P2, and the transistor's base drive is weak (about 0.5 mA), which caps motor current near 45 to 65 mA and may not start a typical coin motor. If a motor is kept and feels weak, lower R12 (4.7 k) to about 470 ohm to 1 k and add a small diode across the pads.
 - **Battery may be about 100 mAh, not 400.** One buyer measured under 400 mWh from empty to full. Measure it before charging unattended.
 - **Waveshare's Arduino sketches are unreliable** for the display too; several buyers had to reverse-engineer the factory firmware. The ESP-IDF code (Waveshare's examples and xiaozhi's board folder) is the reliable starting point for pin maps and init sequences.
 - **Pin map is under-documented.** Now read out of the source code into `firmware/docs/pinmap.md`: one I2C bus (GPIO 14 SCL, 15 SDA; speed set per device), display on QSPI (GPIOs 4 to 8, 11, 12), brightness via panel register 0x51, 0 to 255. Confirm each row on the bench.
@@ -111,6 +113,7 @@ The child cannot read. Every face follows these rules; `docs/screens.html` shows
 - **Tap targets ≥ 96 px at 1×**, which is 7.7 mm on this panel (112 px if we decide we want 9 mm). Tiles fill the face in twos. Nothing in corners: the R9.2 screen corners are about 114 px at 1×, so corner content clips.
 - **Buttons are the safety net.** BOOT (top): press to talk, hold 1.5 s for Hello, press to pause while a song plays. PWR (bottom): wake, and home from anywhere. A terracotta sticker marks BOOT so a child can find the Hello button.
 - **Swipes go left and right only.** No vertical paging.
+- **Haptics confirm, never reward.** If a motor is fitted: a short tap on every BOOT press, a firmer tick when a hold reaches 1.5 s (Hello starts recording), and a double tap when something finishes (Hello sent, and at startup as a bench self-test). No buzzing for achievements, and everyday cues stay at or under 100 ms (only the startup bench test is longer).
 - **Motion (QMI8658 IMU) only makes it easier, never a command.** (1) The face turns itself over when the case is upside down, which is what happens when a child lifts a lanyard-worn Pocket to their eyes. Lying flat, it keeps its last orientation so nothing turns mid-tap. (2) Face-down means asleep: screen off and microphone off, nothing can be recorded. (3) Hold for Hello is ignored while face-down, so no pocket hellos. (4) Raise to wake. No shake or tilt gestures.
 - **No emoji, ever.** Faces use only the icon set and animations on `docs/screens.html`.
 - **Nothing to finish, nothing to win.** No streaks, stars, timers or prompts.
@@ -183,7 +186,7 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 
 - Which STT and TTS providers for the voice service. The research recommends Deepgram Nova-3 (with the training opt-out on every request) and Google Chirp 3 HD, with OpenAI as the fallback. ElevenLabs and Cartesia terms bar use with young children. Latency to first audio should be about a second.
 - Whether the Pebble TTS voice is a fixed provider voice or something PebblePath already uses in the app.
-- Contact delivery: push to the PebblePath app only, or also an SMS/iMessage link for grandparents without the app.
+- Contact delivery (researched 2026-09-12, memo in `Claude outputs/Pebble-Pocket-Hello-Delivery-Memo.md`): a real iMessage is not possible (no Apple API; workarounds send from Thomas's Apple ID and risk bans). **Recommended for the prototype:** an email to Mamie and Papi with a Listen button that opens a simple PebblePath page (clip converted to AAC .m4a, unguessable expiring link, auto-delete). **Later, if the app integration goes ahead:** a PebblePath app push that opens the clip (the app needs iOS 26.4). SMS needs carrier registration even for two people; WhatsApp's business terms forbid family use. Awaiting Thomas's decision.
 - Whether media uploads live in the existing PebblePath Storage bucket or a Pocket-specific one.
 - Lanyard: the case has a 22 mm flat-end slot with a screw bar top and bottom. Check whether the breakaway lanyard's spring-bar adapter seats; if not, run the breakaway cord through the top slot, as drawn on the screens page.
 
@@ -216,3 +219,4 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 - **Video is out of scope.** Learn is songs only (note icon on every tile); the film icon is removed from the set.
 - **No clock on Home.** Home is the stone (raised a little above centre) and the three hint icons.
 - **Calm: either button press goes home.**
+- **Basic haptics added** to the `pebble-pocket` build (`CONFIG_POCKET_HAPTICS`): ALDO3 on at 3.0 V, GPIO18 pulses for tap (60 ms), tick (100 ms) and double. Monday test: one 400 ms buzz at startup means a motor is fitted; feeling nothing is inconclusive (weak drive), so check pads P1/P2 before deciding.

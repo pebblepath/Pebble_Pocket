@@ -22,6 +22,9 @@
 
 #define BOOT_BUTTON_GPIO GPIO_NUM_0
 
+// Vibration motor driver (Q1 base, active high). Pads P1/P2; motor fitting unconfirmed.
+#define MOTOR_GPIO GPIO_NUM_18
+
 #define EXAMPLE_PIN_NUM_LCD_CS GPIO_NUM_12
 #define EXAMPLE_PIN_NUM_LCD_PCLK GPIO_NUM_11
 #define EXAMPLE_PIN_NUM_LCD_DATA0 GPIO_NUM_4

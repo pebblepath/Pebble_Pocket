@@ -1134,4 +1134,17 @@ menu "TAIJIPAI_S3_CONFIG"
         启动双声道
 endmenu
 
+menu "Pebble Pocket"
+
+config POCKET_HAPTICS
+    bool "Vibration cues on the motor pads (GPIO18, AXP2101 ALDO3)"
+    depends on BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_06
+    default n
+    help
+        Turns on AXP2101 ALDO3 and drives GPIO18 for short vibration pulses: a tap on
+        button press, a tick at the long-press threshold, and a double tap at startup.
+        Harmless if no motor is fitted.
+
+endmenu
+
 endmenu

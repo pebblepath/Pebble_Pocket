@@ -18,6 +18,10 @@
 #include <driver/spi_master.h>
 #include "settings.h"
 
+#if CONFIG_POCKET_HAPTICS
+#include "pocket_haptics.h"
+#endif
+
 #include <esp_lcd_touch_ft5x06.h>
 #include <esp_lvgl_port.h>
 #include <lvgl.h>
@@ -45,6 +49,12 @@ public:
 
         // Enable ALDO1(MIC)
         WriteReg(0x90, 0x03);
+
+#if CONFIG_POCKET_HAPTICS
+        // Pebble Pocket: ALDO3 feeds the vibration motor pads (P1). 3.0 V suits a 3 V coin motor.
+        WriteReg(0x94, (3000 - 500) / 100);
+        WriteReg(0x90, 0x07); // ALDO1 + ALDO2 + ALDO3
+#endif
 
         WriteReg(0x64, 0x02); // CV charger voltage setting to 4.1V
 
@@ -200,6 +210,17 @@ private:
             app.ToggleChatState();
         });
 
+#if CONFIG_POCKET_HAPTICS
+        // Pebble Pocket: a tap you can feel on every press, a firmer tick when a hold reaches the
+        // long-press threshold (1.5 s, where Hello will start recording).
+        boot_button_.OnPressDown([]() {
+            PocketHaptics::GetInstance().Play(PocketHaptics::Pattern::kTap);
+        });
+        boot_button_.OnLongPress([]() {
+            PocketHaptics::GetInstance().Play(PocketHaptics::Pattern::kTick);
+        });
+#endif
+
 #if CONFIG_USE_DEVICE_AEC
         boot_button_.OnDoubleClick([this]() {
             auto& app = Application::GetInstance();
@@ -314,6 +335,12 @@ public:
         InitializeSpi();
         InitializeSH8601Display();
         InitializeTouch();
+#if CONFIG_POCKET_HAPTICS
+        // One long buzz at startup: feeling it confirms a motor is fitted. Feeling nothing is
+        // inconclusive, because the board's weak motor drive may not start every motor.
+        PocketHaptics::GetInstance().Initialize(MOTOR_GPIO);
+        PocketHaptics::GetInstance().Play(PocketHaptics::Pattern::kSelfTest);
+#endif
         InitializeButtons();
         InitializeTools();
     }

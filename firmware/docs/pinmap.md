@@ -51,7 +51,7 @@ Sources:
 | IMU interrupt INT1 | 21 | Can wake the chip from deep sleep (only GPIO0 to GPIO21 can). Candidate for raise-to-wake. |
 | RTC interrupt | 39 | Cannot wake from deep sleep; reported to stay low (issue 7). |
 | LCD tearing effect | 13 | Unused; available for tear-free drawing. |
-| Vibration motor driver | 18 | Motor pads powered from ALDO3. Whether a motor is fitted is unknown: check pads P1/P2. |
+| Vibration motor driver | 18 | Active high into Q1 (MMBT3904); pads P1/P2 powered from ALDO3. Used by `CONFIG_POCKET_HAPTICS`. Whether a motor is fitted is unknown: a startup buzz confirms one; no buzz is inconclusive. |
 | UART0 TX / RX | 43 / 44 | |
 | USB D- / D+ | 19 / 20 | |
 | Octal PSRAM | 33 to 37 | **Never configure these.** |
@@ -65,7 +65,7 @@ xiaozhi sets these explicitly ([XZB] `.cc:27-55`); Waveshare's own examples rely
 | DC1 | 3.3 V | main system |
 | ALDO1 | 3.3 V | codec analog supply. **Must stay on.** |
 | ALDO2 | 3.3 V | display power enable. **Must stay on.** |
-| ALDO3 | off | vibration motor (if fitted) |
+| ALDO3 | off in stock xiaozhi; **3.0 V on** in the `pebble-pocket` build | vibration motor pads (if fitted) |
 | everything else | off | |
 
 ## Display
