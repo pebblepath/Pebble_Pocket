@@ -8,3 +8,4 @@ sdkconfig.old
 *.heic
 *.HEIC
 .DS_Store
+*.log

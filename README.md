@@ -38,7 +38,7 @@ pebble-pocket/
 │   ├── index.html
 │   ├── screens.html
 │   └── assets/pocket.css
-├── firmware/      # ESP-IDF project (LVGL face, audio pipeline, WebSocket, microSD sync, OTA)
+├── firmware/      # fork of xiaozhi-esp32 (MIT) in firmware/xiaozhi; build steps in firmware/README.md
 ├── cloud/         # Firebase Cloud Functions (pocket session, media, hello, fleet)
 └── portal/        # Parent-side screens for the existing PebblePath Portal (Lit)
 ```

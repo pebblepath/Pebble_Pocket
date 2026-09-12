@@ -9,6 +9,17 @@
                 "CONFIG_USE_WECHAT_MESSAGE_STYLE=n",
                 "CONFIG_USE_DEVICE_AEC=y"
             ]
+        },
+        {
+            "name": "pebble-pocket",
+            "sdkconfig_append": [
+                "CONFIG_USE_WECHAT_MESSAGE_STYLE=n",
+                "CONFIG_USE_DEVICE_AEC=y",
+                "CONFIG_OTA_URL=\"https://pocket-ota.invalid/ota/\"",
+                "CONFIG_ESPTOOLPY_FLASHSIZE_16MB=n",
+                "CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y",
+                "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/32m.csv\""
+            ]
         }
     ]
 }

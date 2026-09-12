@@ -63,7 +63,7 @@ pebble-pocket/
 │   ├── index.html    ← architecture, flows, constraints, build plan
 │   ├── screens.html  ← 12 face mockups for ages 3+, click to zoom, how it's held, icon set, face rules
 │   └── assets/pocket.css
-├── firmware/         ← ESP-IDF project (empty; Phase 0 starts here)
+├── firmware/         ← xiaozhi-esp32 fork (firmware/xiaozhi, subtree at 563a4f0) + pinmap; build steps in firmware/README.md
 ├── cloud/            ← Firebase Cloud Functions (empty)
 └── portal/           ← parent-side screens for the existing PebblePath Portal (empty)
 ```
