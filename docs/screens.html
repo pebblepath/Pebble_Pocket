@@ -267,7 +267,7 @@
   .ico b { font-family: var(--font-display); font-weight: 700; color: var(--charcoal); }
 </style>
 </head>
-<body class="theme-sandbar">
+<body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="ripple-stone" viewBox="0 0 24 24">
@@ -316,9 +316,9 @@
       <h1>What the child sees.</h1>
       <p class="lede" style="margin-top:16px">Twelve states, no reading required. One big shape per face, icons before words, and the only words that appear are the ones Pebble is teaching. Click any face to zoom in.</p>
       <div class="theme-switch" role="group" aria-label="Face colour scheme">
-        <button type="button" data-theme="sandbar" aria-pressed="true">Sandbar</button>
-        <button type="button" data-theme="dusk" aria-pressed="false">Dusk</button>
-        <span class="theme-note">Sandbar mirrors the app's Home screen. Dusk is the dark option, which uses less battery on this AMOLED screen.</span>
+        <button type="button" data-theme="dusk" aria-pressed="true">Dusk</button>
+        <button type="button" data-theme="sandbar" aria-pressed="false">Sandbar</button>
+        <span class="theme-note">Dusk is the design. Sandbar (the app's Home palette) is parked to revisit later: on a light face the black bezel stands out more.</span>
       </div>
     </div>
     <div class="specs">
@@ -696,11 +696,11 @@
     function apply(theme) {
       document.body.classList.toggle('theme-sandbar', theme === 'sandbar');
       buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.theme === theme)); });
-      try { localStorage.setItem('pocketFaceTheme', theme); } catch (e) {}
+      try { localStorage.setItem('pocketFaceScheme', theme); } catch (e) {}
     }
     var saved = null;
-    try { saved = localStorage.getItem('pocketFaceTheme'); } catch (e) {}
-    apply(saved === 'dusk' ? 'dusk' : 'sandbar');
+    try { saved = localStorage.getItem('pocketFaceScheme'); } catch (e) {}
+    apply(saved === 'sandbar' ? 'sandbar' : 'dusk');
     buttons.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.theme); }); });
   })();
 </script>

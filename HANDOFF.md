@@ -17,13 +17,13 @@ Owner: Thomas Paris (thomas@pebblepath.ai). Pebble Pocket is a PebblePath side p
 
 ## 2. Hardware (ordered Sep 2026, arriving ~Sep 14)
 
-**Waveshare ESP32-S3-Touch-AMOLED-2.06**, Amazon ASIN B0FJQZ7SBG, the variant that includes the 400 mAh MX1.25 battery and straps.
+**Waveshare ESP32-S3-Touch-AMOLED-2.06**, Amazon ASIN B0FJQZ7SBG, the variant that includes the MX1.25 battery (sold as 400 mAh; one buyer measured about 100 mAh) and straps.
 
 | | |
 |---|---|
 | MCU | ESP32-S3R8, dual-core Xtensa LX7 @ 240 MHz, 512 KB SRAM, 8 MB octal PSRAM, 32 MB flash |
 | Display | 2.06" AMOLED, 410 × 502, 16.7M colours, CO5300 driver over QSPI, FT3168 capacitive touch over I2C, 600 nits |
-| Audio | ES8311 codec (playback), ES7210 ADC with echo cancellation (dual mics), 1 W speaker, all on I2S |
+| Audio | ES8311 codec (playback), ES7210 mic ADC (dual mics, one used for voice), NS4150B speaker amp on 3.3 V, all on I2S; echo cancellation is software (ESP-SR) |
 | Sensors | QMI8658 6-axis IMU, PCF85063 RTC |
 | Radio | Wi-Fi 802.11 b/g/n 2.4 GHz, Bluetooth 5 LE. **No classic Bluetooth, so no A2DP speaker mode.** |
 | Storage | microSD (TF) slot |
@@ -36,7 +36,7 @@ Owner: Thomas Paris (thomas@pebblepath.ai). Pebble Pocket is a PebblePath side p
 Wiki: https://www.waveshare.com/wiki/ESP32-S3-Touch-AMOLED-2.06
 Reference code (corrected 2026-09-12 after reading the sources):
 - Waveshare's official repo, github.com/waveshareteam/ESP32-S3-Touch-AMOLED-2.06, is **Apache-2.0, not MIT**. Use its ESP-IDF examples as read-only references. Never copy `examples/arduino/libraries/Arduino_DriveBus` (GPL-3.0).
-- The MIT codebase is **github.com/78/xiaozhi-esp32**, which has an official folder for this exact board (`main/boards/waveshare/esp32-s3-touch-amoled-2.06/`) and already runs push-to-talk, Opus and WebSocket voice on it. Whether Pocket forks it is an open decision (section 9).
+- The MIT codebase is **github.com/78/xiaozhi-esp32**, which has an official folder for this exact board (`main/boards/waveshare/esp32-s3-touch-amoled-2.06/`) and already runs push-to-talk, Opus and WebSocket voice on it. **Pocket firmware is a fork of it** (decided 2026-09-12; see `firmware/README.md`).
 - Verified pin map: `firmware/docs/pinmap.md`. Full research brief with sources: `Claude outputs/Pebble-Pocket-Monday-Brief.md` in the PebblePath workspace (not in this repo).
 
 ### Hardware gotchas already known (from buyer reports)
@@ -66,7 +66,7 @@ pebble-pocket/
 │   ├── screens.html  ← 12 face mockups for ages 3+, click to zoom, how it's held, icon set, face rules
 │   └── assets/pocket.css
 ├── firmware/         ← xiaozhi-esp32 fork (firmware/xiaozhi, subtree at 563a4f0) + pinmap; build steps in firmware/README.md
-├── cloud/            ← Firebase Cloud Functions (empty)
+├── cloud/            ← voice-server: local echo server speaking the xiaozhi protocol, Cloud Run shaped (not deployed)
 └── portal/           ← parent-side screens for the existing PebblePath Portal (empty)
 ```
 
@@ -118,7 +118,7 @@ The child cannot read. Every face follows these rules; `docs/screens.html` shows
 - **No emoji, ever.** Faces use only the icon set and animations on `docs/screens.html`.
 - **Nothing to finish, nothing to win.** No streaks, stars, timers or prompts.
 - **Icons:** Phosphor Icons v2.1.1 (MIT), mirroring the SF Symbols style of the PebblePath iOS app: Fill style for solid shapes (mic, note, play, pause, drop, flower, heart, cloud-off, bolt, house) and Bold for line glyphs (replay, waves, snowflake, tick, arrow). SF Symbols themselves are licensed for Apple platforms, so they cannot ship on the Pocket. On the firmware the set converts to an LVGL font. The ripple stone is the only "character"; nothing has a face. See the icon sheet on `docs/screens.html`.
-- **Two colour schemes, decide on the real screen.** **Sandbar** (default in the mockups) mirrors the PebblePath app's Home hero: sky blue to warm sand with a sun glow and faint wave lines, colours sampled from the iOS asset `sandbar-hero.jpg`. **Dusk** is the dark teal mesh, cheaper on AMOLED because dark pixels draw almost no power. Rain keeps its dusk scene and Resting stays near-black in both. The screens page has a Sandbar / Dusk switch.
+- **Dusk faces.** The dark teal mesh is the design: it feels more premium and lets the face blend into the black glass, and dark pixels cost almost no power on AMOLED. **Sandbar** (the app's Home hero palette) was tried on 2026-09-12 and parked to revisit later; it stays behind a switch on the screens page. Rain keeps its dusk scene and Resting stays near-black.
 
 ### The twelve faces
 
@@ -150,7 +150,7 @@ display font Nunito (700/800) · body font Inter
 
 The ripple-stone mark (Pebble's icon) is in `docs/screens.html` as `<symbol id="ripple-stone">`, 24-grid. Source of truth for tokens on the web side: `PebblePath/Website-Home/index.html` and `Website-Home/cairn-src/src/styles/tokens.css`; iOS: `Theme/Color+Pebble.swift`. The PebblePath workspace also has a `frontend-design` skill that encodes these.
 
-Face backgrounds (both schemes are in `docs/screens.html`; decide on the real screen).
+Face backgrounds. Dusk is the design; Sandbar is parked (both are in `docs/screens.html`).
 
 Sandbar (light, mirrors the app's Home hero `sandbar-hero.jpg`), plus two faint sand-coloured wave lines near the bottom:
 
@@ -236,4 +236,4 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 - **Media storage: a dedicated Pocket bucket** in `pebblepath-992b6`, organised `families/{family}/children/{child}/pocket/...`, with song metadata in Firestore. Not built yet.
 - **Pebble's voice: Chirp 3 HD "Achernar"** (listed as female), the same voice in both languages: `en-US-Chirp3-HD-Achernar` and `fr-FR-Chirp3-HD-Achernar`. Confirm the fr-FR voice appears in the Text-to-Speech voices list on the first server call.
 - **Hello delivery (prototype): PebblePath app push notification plus a small Home card under Upcoming Activities.** Email rejected. TestFlight only, sent only to Thomas's account. The card (`PocketHelloCard.swift` in the PebblePath iOS app) is a DEBUG-only preview with mock data for now; build notes for real delivery (data, rules, dedicated bucket, `pocket_hello` notification kind, guardrails) are in `Claude outputs/Pebble-Pocket-Hello-In-App-Build-Notes.md`.
-- **Face colour scheme:** Thomas asked to try Sandbar (the app's Home hero palette, kept simple). Both Sandbar and Dusk stay in the mockups behind a switch until the faces are seen on the real AMOLED, weighing looks against battery.
+- **Face colour scheme: Dusk stays.** Sandbar (the app's Home hero palette) was tried and parked to revisit later: less premium, and a light face makes the black bezel stand out more. It remains behind a switch on the screens page, Dusk by default.
