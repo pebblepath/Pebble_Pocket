@@ -1,0 +1,27 @@
+{
+  "name": "pebble-pocket-voice-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local voice server for Pebble Pocket (xiaozhi WebSocket protocol). Echo mode for bench bring-up.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "npm run build && node --test --test-concurrency=1 \"dist/test/**/*.test.js\"",
+    "fake-device": "node dist/tools/fake-device.js",
+    "lab-config": "node dist/tools/lab-firmware-config.js",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.4",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.9.3"
+  }
+}

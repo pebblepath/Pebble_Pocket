@@ -19,7 +19,8 @@
                 "CONFIG_ESPTOOLPY_FLASHSIZE_16MB=n",
                 "CONFIG_ESPTOOLPY_FLASHSIZE_32MB=y",
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/32m.csv\"",
-                "CONFIG_POCKET_HAPTICS=y"
+                "CONFIG_POCKET_HAPTICS=y",
+                "CONFIG_POCKET_SAFE_CHARGE=y"
             ]
         }
     ]

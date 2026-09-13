@@ -39,6 +39,7 @@ Set in `xiaozhi/main/boards/waveshare/esp32-s3-touch-amoled-2.06/config.json`, n
 | Language | zh-CN | en-US (build flag) | |
 | Wake word | "nihaoxiaozhi" on | off (build flag) | Pocket is button-first. |
 | Haptics (`CONFIG_POCKET_HAPTICS`) | off | on: ALDO3 at 3.0 V, GPIO18 pulses (`pocket_haptics.h`) | Tap (60 ms) on BOOT press, tick (100 ms) at the 1.5 s hold, one 400 ms buzz at startup as a bench test. |
+| Battery charge current (`CONFIG_POCKET_SAFE_CHARGE`) | 400 mA | 100 mA | The battery may be about 100 mAh; raise it only after measuring capacity. |
 
 ## Still to change before the board joins Wi-Fi with a child nearby
 

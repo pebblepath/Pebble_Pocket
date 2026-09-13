@@ -1145,6 +1145,14 @@ config POCKET_HAPTICS
         button press, a tick at the long-press threshold, and a double tap at startup.
         Harmless if no motor is fitted.
 
+config POCKET_SAFE_CHARGE
+    bool "Conservative 100 mA battery charge current"
+    depends on BOARD_TYPE_WAVESHARE_ESP32_S3_TOUCH_AMOLED_2_06
+    default n
+    help
+        Overrides xiaozhi's 400 mA charge current with 100 mA. The stock battery may be
+        about 100 mAh; keep this on until its capacity has been measured.
+
 endmenu
 
 endmenu

@@ -61,6 +61,12 @@ public:
         WriteReg(0x61, 0x02); // set Main battery precharge current to 50mA
         WriteReg(0x62, 0x0A); // set Main battery charger current to 400mA ( 0x08-200mA, 0x09-300mA, 0x0A-400mA )
         WriteReg(0x63, 0x01); // set Main battery term charge current to 25mA
+
+#if CONFIG_POCKET_SAFE_CHARGE
+        // Pebble Pocket: the battery may be about 100 mAh (buyer measurement), so charge at
+        // 100 mA (XPowersLib XPOWERS_AXP2101_CHG_CUR_100MA = 4) until the real capacity is known.
+        WriteReg(0x62, 0x04);
+#endif
     }
 };
 

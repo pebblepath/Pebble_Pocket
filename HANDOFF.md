@@ -184,10 +184,10 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 
 ## 9. Open questions for Thomas
 
-- Which STT and TTS providers for the voice service. The research recommends Deepgram Nova-3 (with the training opt-out on every request) and Google Chirp 3 HD, with OpenAI as the fallback. ElevenLabs and Cartesia terms bar use with young children. Latency to first audio should be about a second.
+- ~~Which STT and TTS providers~~ **Decided 2026-09-12: Google for both.** Speech-to-text: Cloud Speech-to-Text v2 with the Chirp 3 model (the `us` multi-region; no us-central1 endpoint). Text-to-speech: Cloud Text-to-Speech Chirp 3 HD (one voice across fr-FR and en-US). Both in the `pebblepath-992b6` project, called only from the Cloud Run voice service with a service account (no API keys). Before a child uses it, confirm whether Google's Service Specific Terms on generative AI and under-18 users cover Chirp 3.
 - Whether the Pebble TTS voice is a fixed provider voice or something PebblePath already uses in the app.
 - Contact delivery (researched 2026-09-12, memo in `Claude outputs/Pebble-Pocket-Hello-Delivery-Memo.md`): a real iMessage is not possible (no Apple API; workarounds send from Thomas's Apple ID and risk bans). **Recommended for the prototype:** an email to Mamie and Papi with a Listen button that opens a simple PebblePath page (clip converted to AAC .m4a, unguessable expiring link, auto-delete). **Later, if the app integration goes ahead:** a PebblePath app push that opens the clip (the app needs iOS 26.4). SMS needs carrier registration even for two people; WhatsApp's business terms forbid family use. Awaiting Thomas's decision.
-- Whether media uploads live in the existing PebblePath Storage bucket or a Pocket-specific one.
+- Media storage (direction agreed 2026-09-12, not built): files in Cloud Storage for Firebase inside `pebblepath-992b6`, organised per family and child; song metadata and which four songs are on the Pocket in Firestore under the family/child; parents edit from the iOS app and Portal later. **Decided: a dedicated Pocket bucket** in the same project (own security rules and cost line; Hello clips auto-deleted by a folder-scoped lifecycle rule). The Pocket never reads Firebase directly: the Cloud Run service checks pairing and hands out short-lived download links.
 - Lanyard: the case has a 22 mm flat-end slot with a screw bar top and bottom. Check whether the breakaway lanyard's spring-bar adapter seats; if not, run the breakaway cord through the top slot, as drawn on the screens page.
 
 ## 10. Working conventions
@@ -220,3 +220,7 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 - **No clock on Home.** Home is the stone (raised a little above centre) and the three hint icons.
 - **Calm: either button press goes home.**
 - **Basic haptics added** to the `pebble-pocket` build (`CONFIG_POCKET_HAPTICS`): ALDO3 on at 3.0 V, GPIO18 pulses for tap (60 ms), tick (100 ms) and double. Monday test: one 400 ms buzz at startup means a motor is fitted; feeling nothing is inconclusive (weak drive), so check pads P1/P2 before deciding.
+- **Speech-to-text and text-to-speech: Google** (Chirp 3 STT, Chirp 3 HD TTS), in the PebblePath Firebase project.
+- **Media storage: a dedicated Pocket bucket** in `pebblepath-992b6`, organised `families/{family}/children/{child}/pocket/...`, with song metadata in Firestore. Not built yet.
+- **Pebble's voice: Chirp 3 HD "Achernar"** (listed as female), the same voice in both languages: `en-US-Chirp3-HD-Achernar` and `fr-FR-Chirp3-HD-Achernar`. Confirm the fr-FR voice appears in the Text-to-Speech voices list on the first server call.
+- **Hello delivery (prototype): PebblePath app push notification plus a small Home card under Upcoming Activities.** Email rejected. TestFlight only, sent only to Thomas's account. The card (`PocketHelloCard.swift` in the PebblePath iOS app) is a DEBUG-only preview with mock data for now; build notes for real delivery (data, rules, dedicated bucket, `pocket_hello` notification kind, guardrails) are in `Claude outputs/Pebble-Pocket-Hello-In-App-Build-Notes.md`.
