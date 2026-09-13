@@ -108,7 +108,7 @@ Key decisions, with reasons:
 The child cannot read. Every face follows these rules; `docs/screens.html` shows all twelve.
 
 - **One shape per face**, centred. If a state needs two things, one is spoken by Pebble instead.
-- **Words only when teaching.** The only text on a child-facing face is the word pair Pebble is teaching (French in amber `#D4A843`, English in white). Status, names, titles, errors: spoken, or shown to the parent in the app. No clock and no battery indicator on any face: the Pocket is used in short bursts and nothing should distract the wearer.
+- **Words only when teaching.** The only text on a child-facing face is the word pair Pebble is teaching (French in amber: `#D4A843` on Dusk, the deeper `#946A10` on Sandbar; English in white on Dusk, charcoal on Sandbar). Status, names, titles, errors: spoken, or shown to the parent in the app. No clock and no battery indicator on any face: the Pocket is used in short bursts and nothing should distract the wearer.
 - **Colour is the label.** Teal glow `#7DD4C8` = Pebble listening or talking. Amber = French. Terracotta `#C67B5C` = the one action that leaves the device (Hello). Parents assign a colour per song, so tiles carry an icon and a colour, never a title.
 - **Tap targets ≥ 96 px at 1×**, which is 7.7 mm on this panel (112 px if we decide we want 9 mm). Tiles fill the face in twos. Nothing in corners: the R9.2 screen corners are about 114 px at 1×, so corner content clips.
 - **Buttons are the safety net.** BOOT (top): press to talk, hold 1.5 s for Hello, press to pause while a song plays. PWR (bottom): wake, and home from anywhere. A terracotta sticker marks BOOT so a child can find the Hello button.
@@ -118,7 +118,7 @@ The child cannot read. Every face follows these rules; `docs/screens.html` shows
 - **No emoji, ever.** Faces use only the icon set and animations on `docs/screens.html`.
 - **Nothing to finish, nothing to win.** No streaks, stars, timers or prompts.
 - **Icons:** Phosphor Icons v2.1.1 (MIT), mirroring the SF Symbols style of the PebblePath iOS app: Fill style for solid shapes (mic, note, play, pause, drop, flower, heart, cloud-off, bolt, house) and Bold for line glyphs (replay, waves, snowflake, tick, arrow). SF Symbols themselves are licensed for Apple platforms, so they cannot ship on the Pocket. On the firmware the set converts to an LVGL font. The ripple stone is the only "character"; nothing has a face. See the icon sheet on `docs/screens.html`.
-- **Dark faces** are the wearable exception to PebblePath's light-first rule, because black pixels are free on AMOLED. The dark mesh gradient keeps it PebblePath rather than generic gadget black.
+- **Two colour schemes, decide on the real screen.** **Sandbar** (default in the mockups) mirrors the PebblePath app's Home hero: sky blue to warm sand with a sun glow and faint wave lines, colours sampled from the iOS asset `sandbar-hero.jpg`. **Dusk** is the dark teal mesh, cheaper on AMOLED because dark pixels draw almost no power. Rain keeps its dusk scene and Resting stays near-black in both. The screens page has a Sandbar / Dusk switch.
 
 ### The twelve faces
 
@@ -150,7 +150,17 @@ display font Nunito (700/800) · body font Inter
 
 The ripple-stone mark (Pebble's icon) is in `docs/screens.html` as `<symbol id="ripple-stone">`, 24-grid. Source of truth for tokens on the web side: `PebblePath/Website-Home/index.html` and `Website-Home/cairn-src/src/styles/tokens.css`; iOS: `Theme/Color+Pebble.swift`. The PebblePath workspace also has a `frontend-design` skill that encodes these.
 
-Face mesh background (dark variant used on the Pocket's faces):
+Face backgrounds (both schemes are in `docs/screens.html`; decide on the real screen).
+
+Sandbar (light, mirrors the app's Home hero `sandbar-hero.jpg`), plus two faint sand-coloured wave lines near the bottom:
+
+```css
+background:
+  radial-gradient(circle at 70% 13%, rgba(255,255,255,0.95) 0 5%, rgba(255,255,255,0.5) 13%, transparent 32%),
+  linear-gradient(180deg, #A6D9EA 0%, #C8E5E7 19%, #F5F3DD 40%, #F5E6C3 63%, #EFD5A8 100%);
+```
+
+Dusk (dark mesh, cheaper on AMOLED):
 
 ```css
 background:
@@ -159,6 +169,8 @@ background:
   radial-gradient(ellipse 70% 50% at 50% 105%, rgba(198,123,92,0.30), transparent 65%),
   linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
 ```
+
+For the firmware, pre-render either background as an image (LVGL 9.5 has no dithering, so dark gradients band in RGB565); the screen calibration tool shows a banding test.
 
 ## 7. Pebble's voice (for the system prompt)
 
@@ -224,3 +236,4 @@ Pebble is PebblePath's advisor: warm, calm, brief, a knowledgeable friend rather
 - **Media storage: a dedicated Pocket bucket** in `pebblepath-992b6`, organised `families/{family}/children/{child}/pocket/...`, with song metadata in Firestore. Not built yet.
 - **Pebble's voice: Chirp 3 HD "Achernar"** (listed as female), the same voice in both languages: `en-US-Chirp3-HD-Achernar` and `fr-FR-Chirp3-HD-Achernar`. Confirm the fr-FR voice appears in the Text-to-Speech voices list on the first server call.
 - **Hello delivery (prototype): PebblePath app push notification plus a small Home card under Upcoming Activities.** Email rejected. TestFlight only, sent only to Thomas's account. The card (`PocketHelloCard.swift` in the PebblePath iOS app) is a DEBUG-only preview with mock data for now; build notes for real delivery (data, rules, dedicated bucket, `pocket_hello` notification kind, guardrails) are in `Claude outputs/Pebble-Pocket-Hello-In-App-Build-Notes.md`.
+- **Face colour scheme:** Thomas asked to try Sandbar (the app's Home hero palette, kept simple). Both Sandbar and Dusk stay in the mockups behind a switch until the faces are seen on the real AMOLED, weighing looks against battery.

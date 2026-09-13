@@ -197,6 +197,52 @@
   .watch.back .zz { z-index: 3; color: var(--teal-dark); }
   .watch.back .zz.z1 { right: -8px; top: -14px; } .watch.back .zz.z2 { right: -24px; top: -34px; } .watch.back .zz.z3 { right: -44px; top: -58px; }
 
+  /* ---------- Theme switch ---------- */
+  .theme-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 18px; }
+  .theme-switch button { font: 700 14px/1 var(--font-display); padding: 9px 16px; border-radius: var(--radius-pill); border: var(--border); background: #fff; color: var(--charcoal); cursor: pointer; }
+  .theme-switch button[aria-pressed="true"] { background: var(--teal-deep); border-color: var(--teal-deep); color: #fff; }
+  .theme-switch .theme-note { font-size: 13px; color: var(--warm-gray); }
+
+  /* Shared pieces that change with the theme (Dusk values are the defaults) */
+  .face .arrow { width: 26px; height: 26px; color: rgba(255,255,255,0.45); }
+  .face .word.soft { color: rgba(255,255,255,0.8); }
+  .hold .track { stroke: rgba(255,255,255,0.15); }
+  .face .bolt { width: 28px; height: 28px; color: var(--teal-glow); margin-top: -4px; }
+  .hint-row.still-works { position: static; gap: 22px; }
+  .hint-row.still-works svg { width: 30px; height: 30px; color: var(--teal-glow); }
+  .face.night { background: #06100F; }
+
+  /* ---------- Sandbar: the app's Home hero (sky, sun glow, warm sand), kept simple ----------
+     Colours sampled from the iOS asset sandbar-hero.jpg. Rain (content) and Resting (sleep) keep their own looks. */
+  body.theme-sandbar .face:not(.rain-face):not(.night) {
+    color: var(--charcoal);
+    background:
+      radial-gradient(circle at 70% 13%, rgba(255,255,255,0.95) 0 5%, rgba(255,255,255,0.5) 13%, transparent 32%),
+      linear-gradient(180deg, #A6D9EA 0%, #C8E5E7 19%, #F5F3DD 40%, #F5E6C3 63%, #EFD5A8 100%);
+  }
+  body.theme-sandbar .face:not(.rain-face):not(.night)::before {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 70px; pointer-events: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 205 70' preserveAspectRatio='none'><path d='M-5 34 C 40 26, 80 40, 125 32 S 190 26, 215 32' fill='none' stroke='%23C9AE84' stroke-opacity='0.45' stroke-width='1.2'/><path d='M-5 54 C 45 47, 95 60, 140 52 S 200 47, 215 52' fill='none' stroke='%23C9AE84' stroke-opacity='0.35' stroke-width='1.2'/></svg>") center / 100% 100% no-repeat;
+  }
+  body.theme-sandbar .face .word { color: var(--charcoal); }
+  body.theme-sandbar .face .word.fr { color: #946A10; }
+  body.theme-sandbar .face .word.soft { color: rgba(44,62,64,0.78); }
+  body.theme-sandbar .face .arrow { color: rgba(31,92,84,0.45); }
+  body.theme-sandbar .face:not(.night) .stone { color: #3BA898; filter: drop-shadow(0 8px 14px rgba(31,92,84,0.28)); }
+  body.theme-sandbar .hint-row svg { color: rgba(31,92,84,0.5); }
+  body.theme-sandbar .hint-row.still-works svg { color: var(--teal-dark); }
+  body.theme-sandbar .ring::before, body.theme-sandbar .ring::after { border-color: rgba(45,122,112,0.55); }
+  body.theme-sandbar .dots i { background: rgba(31,92,84,0.6); }
+  body.theme-sandbar .big.sand { background: radial-gradient(circle at 35% 30%, #FFFFFF, #EFE5D2 72%); box-shadow: 0 10px 24px rgba(120,90,40,0.22); }
+  body.theme-sandbar .tile { box-shadow: 0 6px 14px rgba(120,90,40,0.18); }
+  body.theme-sandbar .tile.on { outline-color: rgba(31,92,84,0.85); }
+  body.theme-sandbar .np .art { box-shadow: 0 12px 24px rgba(120,90,40,0.25); }
+  body.theme-sandbar .np .bar { background: rgba(31,92,84,0.15); }
+  body.theme-sandbar .np .bar::after { background: var(--teal); }
+  body.theme-sandbar .hold .track { stroke: rgba(31,92,84,0.14); }
+  body.theme-sandbar .big .check { border-color: #F5E6C3; }
+  body.theme-sandbar .avatar { box-shadow: 0 4px 12px rgba(120,90,40,0.28); }
+
   /* ---------- Modal zoom ---------- */
   .modal { position: fixed; inset: 0; background: rgba(20,30,31,0.72); backdrop-filter: blur(6px); display: none; place-items: center; z-index: 50; padding: 24px; }
   .modal.open { display: grid; }
@@ -221,7 +267,7 @@
   .ico b { font-family: var(--font-display); font-weight: 700; color: var(--charcoal); }
 </style>
 </head>
-<body>
+<body class="theme-sandbar">
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="ripple-stone" viewBox="0 0 24 24">
@@ -269,6 +315,11 @@
       <div class="eyebrow">Face mockups · 410 × 502 · shown at half size · designed for ages 3+</div>
       <h1>What the child sees.</h1>
       <p class="lede" style="margin-top:16px">Twelve states, no reading required. One big shape per face, icons before words, and the only words that appear are the ones Pebble is teaching. Click any face to zoom in.</p>
+      <div class="theme-switch" role="group" aria-label="Face colour scheme">
+        <button type="button" data-theme="sandbar" aria-pressed="true">Sandbar</button>
+        <button type="button" data-theme="dusk" aria-pressed="false">Dusk</button>
+        <span class="theme-note">Sandbar mirrors the app's Home screen. Dusk is the dark option, which uses less battery on this AMOLED screen.</span>
+      </div>
     </div>
     <div class="specs">
       <div class="card"><b>1 shape</b><span>per face, centred</span></div>
@@ -315,13 +366,13 @@
           <div class="face">
             <div class="center" style="gap:14px">
               <div class="word fr">papillon</div>
-              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
+              <svg class="arrow"><use href="#i-arrow-down"/></svg>
               <div class="word">butterfly</div>
               <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
           </div>
         </div>
-        <div class="cap"><b>Pebble answers</b><span>The two words are the whole face. Amber is French, white is English, and Pebble says both aloud. The one round button on the face repeats it slowly. No chat bubbles, no sentences.</span></div>
+        <div class="cap"><b>Pebble answers</b><span>The two words are the whole face. Amber is French, the other word is English, and Pebble says both aloud. The one round button on the face repeats it slowly. No chat bubbles, no sentences.</span></div>
       </div>
 
       <!-- 4 REPLY EN->FR -->
@@ -329,8 +380,8 @@
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
           <div class="face">
             <div class="center" style="gap:14px">
-              <div class="word sm" style="color:rgba(255,255,255,0.8)">I'm hungry</div>
-              <svg style="width:26px;height:26px;color:rgba(255,255,255,0.45)"><use href="#i-arrow-down"/></svg>
+              <div class="word sm soft">I'm hungry</div>
+              <svg class="arrow"><use href="#i-arrow-down"/></svg>
               <div class="word fr">J'ai faim</div>
               <div class="big md sand" style="margin-top:6px"><svg><use href="#i-replay"/></svg></div>
             </div>
@@ -403,7 +454,7 @@
           <div class="face mesh-dark">
             <div class="center" style="gap:16px">
               <div class="hold" id="hold">
-                <svg class="prog" viewBox="0 0 132 132"><circle cx="66" cy="66" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="6"/><circle id="holdArc" cx="66" cy="66" r="60" fill="none" stroke="#E39B7C" stroke-width="6" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="245"/></svg>
+                <svg class="prog" viewBox="0 0 132 132"><circle class="track" cx="66" cy="66" r="60" fill="none" stroke-width="6"/><circle id="holdArc" cx="66" cy="66" r="60" fill="none" stroke="#E39B7C" stroke-width="6" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="245"/></svg>
                 <div class="big terra"><svg><use href="#i-heart"/></svg></div>
               </div>
               <div class="faces"><span class="avatar a1"></span><span class="avatar a2"></span></div>
@@ -429,11 +480,11 @@
       <!-- 11 RESTING -->
       <div class="slot">
         <div class="watch" data-zoom><span class="hw mic m1"></span><span class="hw boot"></span><span class="hw usb"></span><span class="hw pwr"></span><span class="hw mic m2"></span>
-          <div class="face">
+          <div class="face night">
             <span class="zz z1">z</span><span class="zz z2">z</span><span class="zz z3">z</span>
             <div class="center">
               <svg class="stone" style="opacity:.6;filter:none"><use href="#ripple-stone"/></svg>
-              <svg style="width:28px;height:28px;color:var(--teal-glow);margin-top:-4px"><use href="#i-bolt"/></svg>
+              <svg class="bolt"><use href="#i-bolt"/></svg>
             </div>
           </div>
         </div>
@@ -446,7 +497,7 @@
           <div class="face mesh-dark">
             <div class="center" style="gap:18px">
               <div class="big sand"><svg><use href="#i-cloud-off"/></svg></div>
-              <div class="hint-row" style="position:static;gap:22px"><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-note"/></svg><svg style="color:var(--teal-glow);width:30px;height:30px"><use href="#i-drop"/></svg></div>
+              <div class="hint-row still-works"><svg><use href="#i-note"/></svg><svg><use href="#i-drop"/></svg></div>
             </div>
           </div>
         </div>
@@ -639,6 +690,18 @@
     });
     modal.addEventListener('click', function () { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); host.innerHTML = ''; });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') modal.click(); });
+  })();
+  (function () {
+    var buttons = document.querySelectorAll('.theme-switch button');
+    function apply(theme) {
+      document.body.classList.toggle('theme-sandbar', theme === 'sandbar');
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.theme === theme)); });
+      try { localStorage.setItem('pocketFaceTheme', theme); } catch (e) {}
+    }
+    var saved = null;
+    try { saved = localStorage.getItem('pocketFaceTheme'); } catch (e) {}
+    apply(saved === 'dusk' ? 'dusk' : 'sandbar');
+    buttons.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.theme); }); });
   })();
 </script>
 </body>
